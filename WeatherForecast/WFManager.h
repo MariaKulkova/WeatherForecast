@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "WFDaily.h"
 #import "WFClient.h"
+#import "WFLocation.h"
 
 @interface WFManager : NSObject
 {
@@ -17,8 +18,7 @@
     WFClient* weatherServiceClient;
 }
 
-//- (WFDaily*) getDailyForecastForLocation: (NSString*) location;
-- (void) getDailyForecastForLocation: (NSString*) location;
+- (void) getForecastForLocation: (NSString*) location withCompletionHandler:(void (^)(WFLocation *))completionHandler;
 
 
 @end

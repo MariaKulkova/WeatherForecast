@@ -14,12 +14,12 @@
 		4CA4CF461A932291008C28AD /* WeatherForecastTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CA4CF451A932291008C28AD /* WeatherForecastTests.m */; };
 		4CA4CF641A934534008C28AD /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4CA4CF621A934534008C28AD /* LaunchScreen.xib */; };
 		4CA4CF651A934534008C28AD /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4CA4CF631A934534008C28AD /* Main.storyboard */; };
-		4CA4CF681A934574008C28AD /* WeatherParameters.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CA4CF671A934574008C28AD /* WeatherParameters.m */; };
 		4CA4CF6B1A934632008C28AD /* WFConditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CA4CF6A1A934632008C28AD /* WFConditions.m */; };
 		4CA4CF6E1A93482A008C28AD /* WFDaily.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CA4CF6D1A93482A008C28AD /* WFDaily.m */; };
 		4CA4CF711A9348C6008C28AD /* WFLocation.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CA4CF701A9348C6008C28AD /* WFLocation.m */; };
 		4CA4CF741A934DA8008C28AD /* WFClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CA4CF731A934DA8008C28AD /* WFClient.m */; };
 		4CA4CF771A934DCF008C28AD /* WFManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CA4CF761A934DCF008C28AD /* WFManager.m */; };
+		4CC552381A95D8BF00797E51 /* WFJSONParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CC552371A95D8BF00797E51 /* WFJSONParser.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -46,8 +46,6 @@
 		4CA4CF451A932291008C28AD /* WeatherForecastTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WeatherForecastTests.m; sourceTree = "<group>"; };
 		4CA4CF621A934534008C28AD /* LaunchScreen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LaunchScreen.xib; sourceTree = "<group>"; };
 		4CA4CF631A934534008C28AD /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
-		4CA4CF661A934574008C28AD /* WeatherParameters.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WeatherParameters.h; sourceTree = "<group>"; };
-		4CA4CF671A934574008C28AD /* WeatherParameters.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WeatherParameters.m; sourceTree = "<group>"; };
 		4CA4CF691A934632008C28AD /* WFConditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WFConditions.h; sourceTree = "<group>"; };
 		4CA4CF6A1A934632008C28AD /* WFConditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WFConditions.m; sourceTree = "<group>"; };
 		4CA4CF6C1A93482A008C28AD /* WFDaily.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WFDaily.h; sourceTree = "<group>"; };
@@ -59,6 +57,8 @@
 		4CA4CF751A934DCF008C28AD /* WFManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WFManager.h; sourceTree = "<group>"; };
 		4CA4CF761A934DCF008C28AD /* WFManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WFManager.m; sourceTree = "<group>"; };
 		4CA4CF781A937469008C28AD /* WFRequestAPIStrings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WFRequestAPIStrings.h; sourceTree = "<group>"; };
+		4CC552361A95D8BF00797E51 /* WFJSONParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WFJSONParser.h; sourceTree = "<group>"; };
+		4CC552371A95D8BF00797E51 /* WFJSONParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WFJSONParser.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -107,6 +107,8 @@
 				4CA4CF731A934DA8008C28AD /* WFClient.m */,
 				4CA4CF751A934DCF008C28AD /* WFManager.h */,
 				4CA4CF761A934DCF008C28AD /* WFManager.m */,
+				4CC552361A95D8BF00797E51 /* WFJSONParser.h */,
+				4CC552371A95D8BF00797E51 /* WFJSONParser.m */,
 				4CA4CF2D1A932291008C28AD /* AppDelegate.h */,
 				4CA4CF2E1A932291008C28AD /* AppDelegate.m */,
 				4CA4CF301A932291008C28AD /* ViewController.h */,
@@ -117,8 +119,6 @@
 				4CA4CF6D1A93482A008C28AD /* WFDaily.m */,
 				4CA4CF691A934632008C28AD /* WFConditions.h */,
 				4CA4CF6A1A934632008C28AD /* WFConditions.m */,
-				4CA4CF661A934574008C28AD /* WeatherParameters.h */,
-				4CA4CF671A934574008C28AD /* WeatherParameters.m */,
 				4CA4CF361A932291008C28AD /* Images.xcassets */,
 				4CA4CF291A932291008C28AD /* Supporting Files */,
 			);
@@ -256,8 +256,8 @@
 				4CA4CF771A934DCF008C28AD /* WFManager.m in Sources */,
 				4CA4CF321A932291008C28AD /* ViewController.m in Sources */,
 				4CA4CF711A9348C6008C28AD /* WFLocation.m in Sources */,
+				4CC552381A95D8BF00797E51 /* WFJSONParser.m in Sources */,
 				4CA4CF2F1A932291008C28AD /* AppDelegate.m in Sources */,
-				4CA4CF681A934574008C28AD /* WeatherParameters.m in Sources */,
 				4CA4CF6E1A93482A008C28AD /* WFDaily.m in Sources */,
 				4CA4CF2C1A932291008C28AD /* main.m in Sources */,
 			);

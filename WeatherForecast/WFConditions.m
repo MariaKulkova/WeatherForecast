@@ -10,6 +10,6 @@
 
 @implementation WFConditions
 
-@synthesize forcastDateTime, temperature, weatherSpecification;
+@synthesize forcastDateTime, temperature, weatherType;
 
 @end

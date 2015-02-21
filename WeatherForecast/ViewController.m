@@ -19,6 +19,13 @@
 
 @implementation ViewController
 
+- (id) init{
+    if (self = [super init]){
+        weatherForecastManager = [[WFManager alloc] init];
+    }
+    return self;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
@@ -30,19 +37,26 @@
 }
 
 - (IBAction)searchButtonClick:(id)sender {
-    [self getCountryInfo];
-//    if (![self.townTextField.text isEqualToString:@""]){
-//        self.townName = self.townTextField.text;
-//        [self getCountryInfo];
-//    }
+    if (![self.townTextField.text isEqualToString:@""]) {
+        self.townName = self.townTextField.text;
+        [self getCountryInfo];
+    }
 }
 
 - (void) getCountryInfo{
-    
-    // Prepare the URL that we'll get the country info data from.
-    self.townName = @"Taganrog";
-    WFManager *weatherManager = [[WFManager alloc] init];
-    [weatherManager getDailyForecastForLocation:self.townName];
+
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
+        
+        weatherForecastManager = [[WFManager alloc] init];
+        [weatherForecastManager getForecastForLocation:self.townName withCompletionHandler:^(WFLocation *locationForecast) {
+            
+            // Check if any data returned.
+            if (locationForecast != nil) {
+                WFDaily *today = [locationForecast.locationForecast objectAtIndex:0];
+                NSLog(@"Temperature in %@ is %f C", locationForecast.locationName, today.currentConditions.temperature);
+            }
+        }];
+    });
 }
 
 @end

@@ -7,8 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "WFManager.h"
 
 @interface ViewController : UIViewController
+{
+    WFManager *weatherForecastManager;
+}
 
 @property (strong, nonatomic) NSString *townName;
 

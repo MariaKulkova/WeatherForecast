@@ -9,6 +9,11 @@
 #import <Foundation/Foundation.h>
 
 @interface WFClient : NSObject
+{
+    NSURLSession *URLSession;
+    
+    dispatch_semaphore_t dataDidLoadSemaphore;
+}
 
 - (NSData*) getCurrentWeatherForLocation: (NSString*) location;
 
@@ -16,6 +21,6 @@
 
 - (NSData*) getAverrageWeatherForLocation: (NSString*) location;
 
-+ (void)downloadDataFromURL:(NSURL *)url withCompletionHandler:(void (^)(NSData *))completionHandler;
+- (NSDate*) getLocationsForSearchString: (NSString*) location;
 
 @end

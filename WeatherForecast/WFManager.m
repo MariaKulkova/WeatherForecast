@@ -7,6 +7,7 @@
 //
 
 #import "WFManager.h"
+#import "WFJSONParser.h"
 
 @implementation WFManager
 
@@ -18,30 +19,31 @@
     return self;
 }
 
-- (void) getDailyForecastForLocation:(NSString *)location{
-    
-    [WFClient downloadDataFromURL:url withCompletionHandler:^(NSData *data) {
-        // Check if any data returned.
-        if (data != nil) {
-            
-            receivedForecast = data;
-        }
-    }];
+- (void) getForecastForLocation:(NSString *)location withCompletionHandler:(void (^)(WFLocation *))completionHandler{
 
+    NSData* dataCur = [weatherServiceClient getCurrentWeatherForLocation:location];
+    NSData* dataAver = [weatherServiceClient getAverrageWeatherForLocation:location];
+    NSData* dataHour = [weatherServiceClient getHourlyWeatherForLocation:location];
     
-    NSData *currentWeatherData = [weatherServiceClient getCurrentWeatherForLocation:location];
-    
-    // Convert the returned data into a dictionary.
     NSError *error;
-    NSMutableDictionary *returnedDict = [NSJSONSerialization JSONObjectWithData:currentWeatherData options:kNilOptions error:&error];
+    NSMutableDictionary *currentDictionary = [[NSJSONSerialization JSONObjectWithData:dataCur options:kNilOptions error:&error] objectForKey:@"data"];
+    NSMutableDictionary *averageDictionary = [[NSJSONSerialization JSONObjectWithData:dataAver options:kNilOptions error:&error] objectForKey:@"data"];
+    NSMutableDictionary *hourlyDictionary = [[NSJSONSerialization JSONObjectWithData:dataHour options:kNilOptions error:&error] objectForKey:@"data"];
 
-//    if (error != nil) {
-//        NSLog(@"%@", [error localizedDescription]);
-//    }
-//    else{
-//        self.townWeatherDictionary = [[returnedDict objectForKey:@"data"] objectForKey:@"current_condition"];
-//        NSLog(@"%@", self.townWeatherDictionary);
-//    }
+    WFLocation *locationWeather = [[WFLocation alloc] init];
+    locationWeather.locationName = location;
+    locationWeather.lastForecastUpdate = [NSDate date];
+    
+    if (error != nil) {
+        NSLog(@"%@", [error localizedDescription]);
+    }
+    else{
+        locationWeather.locationForecast = [WFJSONParser getLocationForecastForJSON:currentDictionary withAverageConditions:averageDictionary withHourlyConditions:hourlyDictionary];
+    }
+
+    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+        completionHandler(locationWeather);
+    }];
 }
 
 @end

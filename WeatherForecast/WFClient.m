@@ -11,66 +11,101 @@
 
 @implementation WFClient
 
+- (id) init{
+    if (self = [super init]){
+        
+        // Instantiate a session configuration object.
+        NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
+        
+        // Instantiate a session object.
+        URLSession = [NSURLSession sessionWithConfiguration:configuration];
+        
+        // Create semaphore with signal state
+        dataDidLoadSemaphore = dispatch_semaphore_create(0);
+    }
+    return self;
+}
+
 - (NSData*) getCurrentWeatherForLocation:(NSString *)location{
     
-    NSString *URLString = [NSString stringWithFormat:WEATHER_API_LOCALWEATHER_URL, location, WEATHER_API_FREE_KEY];
+    NSString *URLString = [self constructRequestForLocation:location withParams:[NSArray arrayWithObjects: WEATHER_API_PARAMS_CURRENT_DAY, WEATHER_API_PARAMS_HOURLY_EXCLUDE, nil]];
     NSURL *url = [NSURL URLWithString:URLString];
     
-    __block NSData *receivedForecast;
-    [WFClient downloadDataFromURL:url withCompletionHandler:^(NSData *data) {
-        // Check if any data returned.
+    __block NSData* receivedData = [[NSData alloc] init];
+    [self downloadDataFromURL:url withCompletionHandler:^(NSData *data){
         if (data != nil) {
-            
-            receivedForecast = data;
+            receivedData = data;
         }
+        
+        dispatch_semaphore_signal(dataDidLoadSemaphore);
     }];
-    return receivedForecast;
+    
+    dispatch_semaphore_wait(dataDidLoadSemaphore, DISPATCH_TIME_FOREVER);
+    return receivedData;
 }
 
 - (NSData*) getAverrageWeatherForLocation:(NSString *)location{
-    NSString *URLString = [NSString stringWithFormat:WEATHER_API_LOCALWEATHER_URL, location, WEATHER_API_FREE_KEY];
+
+    NSString *URLString = [self constructRequestForLocation:location withParams:[NSArray arrayWithObjects: WEATHER_API_PARAMS_AVERRAGE, nil]];
     NSURL *url = [NSURL URLWithString:URLString];
     
-    __block NSData *receivedForecast;
-    [WFClient downloadDataFromURL:url withCompletionHandler:^(NSData *data) {
-        // Check if any data returned.
+    __block NSData* receivedData = [[NSData alloc] init];
+    [self downloadDataFromURL:url withCompletionHandler:^(NSData *data){
         if (data != nil) {
-            receivedForecast = data;
+            receivedData = data;
         }
+        
+        dispatch_semaphore_signal(dataDidLoadSemaphore);
     }];
-    return receivedForecast;
+    
+    dispatch_semaphore_wait(dataDidLoadSemaphore, DISPATCH_TIME_FOREVER);
+    return receivedData;
+
 }
 
 - (NSData*) getHourlyWeatherForLocation:(NSString *)location{
     
-    NSString *URLString = [NSString stringWithFormat:WEATHER_API_LOCALWEATHER_URL, location, WEATHER_API_FREE_KEY];
+    NSString *URLString = [self constructRequestForLocation:location withParams:[NSArray arrayWithObjects: WEATHER_API_PARAMS_HOURLY, nil]];
     NSURL *url = [NSURL URLWithString:URLString];
     
-    __block NSData *receivedForecast;
-    [WFClient downloadDataFromURL:url withCompletionHandler:^(NSData *data) {
-        // Check if any data returned.
+    __block NSData* receivedData = [[NSData alloc] init];
+    [self downloadDataFromURL:url withCompletionHandler:^(NSData *data){
         if (data != nil) {
-            receivedForecast = data;
+            receivedData = data;
         }
+        
+        dispatch_semaphore_signal(dataDidLoadSemaphore);
     }];
-    return receivedForecast;
+    
+    dispatch_semaphore_wait(dataDidLoadSemaphore, DISPATCH_TIME_FOREVER);
+    return receivedData;
 }
 
+- (NSString*) constructRequestForLocation: (NSString*) location withParams: (NSArray*) params{
+    
+    NSString* requestString = WEATHER_API_LOCALWEATHER_URL;
+    
+    // Add required location parameter
+    requestString = [requestString stringByAppendingString:[NSString stringWithFormat:@"&q=%@", location]];
+    
+    for (NSString* item in params) {
+        requestString = [requestString stringByAppendingString:[NSString stringWithFormat:@"&%@", item]];
+    }
+    return requestString;
+}
 
-+ (void)downloadDataFromURL:(NSURL *)url withCompletionHandler:(void (^)(NSData *))completionHandler{
-    
-    // Instantiate a session configuration object.
-    NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
-    
-    // Instantiate a session object.
-    NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration];
-    
+- (void)downloadDataFromURL:(NSURL *)url withCompletionHandler:(void (^)(NSData *))completionHandler{
+  
     // Create a data task object to perform the data downloading.
-    NSURLSessionDataTask *task = [session dataTaskWithURL:url completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+    NSURLSessionDataTask *task = [URLSession dataTaskWithURL:url completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         
         if (error != nil) {
             // If any error occurs then just display its description on the console.
             NSLog(@"%@", [error localizedDescription]);
+            [[NSOperationQueue currentQueue] addOperationWithBlock:^{
+                completionHandler(nil);
+            }];
+
         }
         else{
             // If no error occurs, check the HTTP status code.
@@ -82,7 +117,7 @@
             }
             
             // Call the completion handler with the returned data on the main thread.
-            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+            [[NSOperationQueue currentQueue] addOperationWithBlock:^{
                 completionHandler(data);
             }];
         }
