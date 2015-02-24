@@ -48,12 +48,19 @@
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
         
         weatherForecastManager = [[WFManager alloc] init];
-        [weatherForecastManager getForecastForLocation:self.townName withCompletionHandler:^(WFLocation *locationForecast) {
-            
-            // Check if any data returned.
-            if (locationForecast != nil) {
-                WFDaily *today = [locationForecast.locationForecast objectAtIndex:0];
-                NSLog(@"Temperature in %@ is %f C", locationForecast.locationName, today.currentConditions.temperature);
+//        
+//        [weatherForecastManager getForecastForLocation:self.townName withCompletionHandler:^(WFLocation *locationForecast) {
+//            
+//            // Check if any data returned.
+//            if (locationForecast != nil) {
+//                WFDaily *today = [locationForecast.locationForecast objectAtIndex:0];
+//                NSLog(@"Temperature in %@ is %f C", locationForecast.locationName, today.currentConditions.temperature);
+//            }
+//        }];
+        
+        [weatherForecastManager getLocationsForSearchingWord:self.townName withCompletionHandler:^(NSArray *locationsList) {
+            if (locationsList != nil){
+                NSLog(@"%@", locationsList);
             }
         }];
     });

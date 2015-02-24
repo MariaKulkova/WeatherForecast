@@ -13,10 +13,12 @@
 
 @interface WFJSONParser : NSObject
 
-+ (NSArray*) getLocationForecastForJSON: (NSMutableDictionary*) currentConditions
-                     withAverageConditions: (NSMutableDictionary*) averageConditions
-                      withHourlyConditions: (NSMutableDictionary*) hourlyConditions;
++ (NSArray*) getLocationForecastForJSON: (NSData*) currentConditionsData
+                     withAverageConditions: (NSData*) averageConditionsData
+                      withHourlyConditions: (NSData*) hourlyConditionsData;
 
-+ (WFDaily*) getDailyForecastForJSON: (NSMutableDictionary*) hourlyConditions;
++ (WFDaily*) getDailyForecastForJSON: (NSData*) hourlyConditionsData;
+
++ (NSArray*) getLocationsSetForJSON: (NSData*) queryResultData;
 
 @end

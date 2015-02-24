@@ -26,47 +26,46 @@
     return self;
 }
 
+//  Determines current weather conditions
 - (NSData*) getCurrentWeatherForLocation:(NSString *)location{
     
-    NSString *URLString = [self constructRequestForLocation:location withParams:[NSArray arrayWithObjects: WEATHER_API_PARAMS_CURRENT_DAY, WEATHER_API_PARAMS_HOURLY_EXCLUDE, nil]];
-    NSURL *url = [NSURL URLWithString:URLString];
-    
-    __block NSData* receivedData = [[NSData alloc] init];
-    [self downloadDataFromURL:url withCompletionHandler:^(NSData *data){
-        if (data != nil) {
-            receivedData = data;
-        }
-        
-        dispatch_semaphore_signal(dataDidLoadSemaphore);
-    }];
-    
-    dispatch_semaphore_wait(dataDidLoadSemaphore, DISPATCH_TIME_FOREVER);
-    return receivedData;
+    NSString *URLString = [self constructRequestWithBaseURL:WEATHER_API_LOCALWEATHER_URL forLocation:location withParams:[NSArray arrayWithObjects: WEATHER_API_PARAMS_CURRENT_CONDITIONS, nil]];
+    NSData* downloadedData = [self initializeDownloadProcess:[NSURL URLWithString:URLString]];
+    return downloadedData;
 }
 
+// Determines hourly forecast for all available days
 - (NSData*) getAverrageWeatherForLocation:(NSString *)location{
 
-    NSString *URLString = [self constructRequestForLocation:location withParams:[NSArray arrayWithObjects: WEATHER_API_PARAMS_AVERRAGE, nil]];
-    NSURL *url = [NSURL URLWithString:URLString];
-    
-    __block NSData* receivedData = [[NSData alloc] init];
-    [self downloadDataFromURL:url withCompletionHandler:^(NSData *data){
-        if (data != nil) {
-            receivedData = data;
-        }
-        
-        dispatch_semaphore_signal(dataDidLoadSemaphore);
-    }];
-    
-    dispatch_semaphore_wait(dataDidLoadSemaphore, DISPATCH_TIME_FOREVER);
-    return receivedData;
-
+    NSString *URLString = [self constructRequestWithBaseURL:WEATHER_API_LOCALWEATHER_URL forLocation:location withParams:[NSArray arrayWithObjects: WEATHER_API_PARAMS_AVERRAGE, nil]];
+    NSData* downloadedData = [self initializeDownloadProcess:[NSURL URLWithString:URLString]];
+    return downloadedData;
 }
 
+// Determines average weather conditions for all available days
 - (NSData*) getHourlyWeatherForLocation:(NSString *)location{
     
-    NSString *URLString = [self constructRequestForLocation:location withParams:[NSArray arrayWithObjects: WEATHER_API_PARAMS_HOURLY, nil]];
-    NSURL *url = [NSURL URLWithString:URLString];
+    NSString *URLString = [self constructRequestWithBaseURL:WEATHER_API_LOCALWEATHER_URL forLocation:location withParams:[NSArray arrayWithObjects: WEATHER_API_PARAMS_HOURLY, nil]];
+    NSData* downloadedData = [self initializeDownloadProcess:[NSURL URLWithString:URLString]];
+    return downloadedData;
+}
+
+// Determines weather conditions for today for specified location
+- (NSData*) getTodayWeatherForLocation:(NSString *)location{
+    NSString *URLString = [self constructRequestWithBaseURL:WEATHER_API_LOCALWEATHER_URL forLocation:location withParams:[NSArray arrayWithObjects: WEATHER_API_PARAMS_TODAY_WEATHER, nil]];
+    NSData* downloadedData = [self initializeDownloadProcess:[NSURL URLWithString:URLString]];
+    return downloadedData;
+}
+
+// Determines locations which are the best suited to searching string
+- (NSData*) getLocationsForSearchString:(NSString *)searchingString{
+    
+    NSString *URLString = [self constructRequestWithBaseURL:WEATHER_API_SEARCH_URL forLocation:searchingString withParams:nil];
+    NSData* downloadedData = [self initializeDownloadProcess:[NSURL URLWithString:URLString]];
+    return downloadedData;
+}
+
+- (NSData*) initializeDownloadProcess: (NSURL*) url{
     
     __block NSData* receivedData = [[NSData alloc] init];
     [self downloadDataFromURL:url withCompletionHandler:^(NSData *data){
@@ -81,12 +80,12 @@
     return receivedData;
 }
 
-- (NSString*) constructRequestForLocation: (NSString*) location withParams: (NSArray*) params{
+- (NSString*) constructRequestWithBaseURL: (NSString*) baseURL forLocation: (NSString*) location withParams: (NSArray*) params{
     
-    NSString* requestString = WEATHER_API_LOCALWEATHER_URL;
+    NSString* requestString = baseURL;
     
     // Add required location parameter
-    requestString = [requestString stringByAppendingString:[NSString stringWithFormat:@"&q=%@", location]];
+    requestString = [requestString stringByAppendingString:[NSString stringWithFormat:WEATHER_API_PARAMS_REQUIRED, WEATHER_API_FREE_KEY, location]];
     
     for (NSString* item in params) {
         requestString = [requestString stringByAppendingString:[NSString stringWithFormat:@"&%@", item]];
@@ -126,6 +125,5 @@
     // Resume the task.
     [task resume];
 }
-
 
 @end

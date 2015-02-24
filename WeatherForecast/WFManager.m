@@ -19,31 +19,60 @@
     return self;
 }
 
+// Organize receiving weather forecast for specified location from service
 - (void) getForecastForLocation:(NSString *)location withCompletionHandler:(void (^)(WFLocation *))completionHandler{
 
-    NSData* dataCur = [weatherServiceClient getCurrentWeatherForLocation:location];
-    NSData* dataAver = [weatherServiceClient getAverrageWeatherForLocation:location];
-    NSData* dataHour = [weatherServiceClient getHourlyWeatherForLocation:location];
-    
-    NSError *error;
-    NSMutableDictionary *currentDictionary = [[NSJSONSerialization JSONObjectWithData:dataCur options:kNilOptions error:&error] objectForKey:@"data"];
-    NSMutableDictionary *averageDictionary = [[NSJSONSerialization JSONObjectWithData:dataAver options:kNilOptions error:&error] objectForKey:@"data"];
-    NSMutableDictionary *hourlyDictionary = [[NSJSONSerialization JSONObjectWithData:dataHour options:kNilOptions error:&error] objectForKey:@"data"];
-
     WFLocation *locationWeather = [[WFLocation alloc] init];
-    locationWeather.locationName = location;
-    locationWeather.lastForecastUpdate = [NSDate date];
     
-    if (error != nil) {
-        NSLog(@"%@", [error localizedDescription]);
+    @try {
+        // receive data from service in json format
+        NSData *currentData = [weatherServiceClient getCurrentWeatherForLocation:location];
+        NSData *averageData = [weatherServiceClient getAverrageWeatherForLocation:location];
+        NSData *hourlyData = [weatherServiceClient getHourlyWeatherForLocation:location];
+    
+        locationWeather.locationName = location;
+        locationWeather.lastForecastUpdate = [NSDate date];
+        
+        // receive array of daily forecasts for specified location from parser
+        locationWeather.locationForecast = [WFJSONParser getLocationForecastForJSON:currentData withAverageConditions:averageData withHourlyConditions:hourlyData];
     }
-    else{
-        locationWeather.locationForecast = [WFJSONParser getLocationForecastForJSON:currentDictionary withAverageConditions:averageDictionary withHourlyConditions:hourlyDictionary];
+    @catch (NSException *exception) {
+        
+        // TODO: notify about service interaction exceptions and parsing exceptions
+        NSLog(@"%@ occured. Description: %@", exception.name, exception.description);
+        locationWeather = nil;
     }
+    @finally{
+        
+        // Anyway notify controller that data receiving process was finished
+        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+            completionHandler(locationWeather);
+        }];
+    }
+}
 
-    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-        completionHandler(locationWeather);
-    }];
+// Organize receiving of locations sets which correspond to searching query
+- (void) getLocationsForSearchingWord:(NSString *)searchingWord withCompletionHandler:(void (^)(NSArray *))completionHandler{
+    
+    NSArray *locationsList = [[NSArray alloc] init];
+    
+    @try {
+        NSData *queryResultSet = [weatherServiceClient getLocationsForSearchString:searchingWord];
+        locationsList = [WFJSONParser getLocationsSetForJSON:queryResultSet];
+    }
+    @catch (NSException *exception) {
+        // throw exceptions about parsing problems
+        // TODO: notify about service interaction exceptions and parsing exceptions
+        NSLog(@"%@ occured. Description: %@", exception.name, exception.description);
+        locationsList = nil;
+    }
+    @finally {
+        
+        // Anyway notify controller that data receiving process was finished
+        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+            completionHandler(locationsList);
+        }];
+    }
 }
 
 @end

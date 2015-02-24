@@ -18,7 +18,18 @@
     WFClient* weatherServiceClient;
 }
 
+/**
+ Organize receiving weather forecast for specified location from service
+ @param location represents place where it is necessary to receive weather conditions
+ @param completionHandler is a block which will be excuted when all necessary operation are performed
+ */
 - (void) getForecastForLocation: (NSString*) location withCompletionHandler:(void (^)(WFLocation *))completionHandler;
 
+/**
+ Organize receiving of locations sets which correspond to searching query
+ @param searchingWord represents name of locations which must be shown
+@param completionHandler is a block which will be excuted when all necessary operation are performed
+ */
+- (void) getLocationsForSearchingWord: (NSString*) searchingWord withCompletionHandler:(void (^)(NSArray *))completionHandler;
 
 @end
