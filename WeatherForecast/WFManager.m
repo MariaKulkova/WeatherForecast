@@ -8,6 +8,7 @@
 
 #import "WFManager.h"
 #import "WFJSONParser.h"
+#import "GeographyLocation.h"
 
 @implementation WFManager
 
@@ -20,21 +21,22 @@
 }
 
 // Organize receiving weather forecast for specified location from service
-- (void) getForecastForLocation:(NSString *)location withCompletionHandler:(void (^)(WFLocation *))completionHandler{
+- (void) getForecastForLocation:(GeographyLocation *)location withCompletionHandler:(void (^)(WFLocation *))completionHandler{
 
     WFLocation *locationWeather = [[WFLocation alloc] init];
     
     @try {
         // receive data from service in json format
-        NSData *currentData = [weatherServiceClient getCurrentWeatherForLocation:location];
-        NSData *averageData = [weatherServiceClient getAverrageWeatherForLocation:location];
-        NSData *hourlyData = [weatherServiceClient getHourlyWeatherForLocation:location];
+        NSString* position = [location makePositionFromCoordinates];
+        NSData *currentData = [weatherServiceClient getCurrentWeatherForLocation:position];
+        NSData *averageData = [weatherServiceClient getAverrageWeatherForLocation:position];
+        NSData *hourlyData = [weatherServiceClient getHourlyWeatherForLocation:position];
     
-        locationWeather.locationName = location;
+        locationWeather.location= location;
         locationWeather.lastForecastUpdate = [NSDate date];
         
         // receive array of daily forecasts for specified location from parser
-        locationWeather.locationForecast = [WFJSONParser getLocationForecastForJSON:currentData withAverageConditions:averageData withHourlyConditions:hourlyData];
+        locationWeather.locationForecast = [WFJSONParser parseLocationForecast:currentData withAverageConditions:averageData withHourlyConditions:hourlyData];
     }
     @catch (NSException *exception) {
         
@@ -58,7 +60,7 @@
     
     @try {
         NSData *queryResultSet = [weatherServiceClient getLocationsForSearchString:searchingWord];
-        locationsList = [WFJSONParser getLocationsSetForJSON:queryResultSet];
+        locationsList = [WFJSONParser parseLocationsSet:queryResultSet];
     }
     @catch (NSException *exception) {
         // throw exceptions about parsing problems

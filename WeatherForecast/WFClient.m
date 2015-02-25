@@ -9,6 +9,30 @@
 #import "WFClient.h"
 #import "WFRequestAPIStrings.h"
 
+@interface WFClient ()
+
+/**
+ Initializes data downloading process
+ @param url represents query to service
+ @return json data which was received from service
+ */
+- (NSData*) initializeDownloadProcess: (NSURL*) url;
+
+/**
+ Makes query to service from specified parameters
+ @param baseURL represents base url for query
+ @param location represents location for query
+ @param params represents optional parameters for query
+ @return whole service query string
+ */
+- (NSString*) constructRequestWithBaseURL: (NSString*) baseURL forLocation: (NSString*) location withParams: (NSArray*) params;
+
+/**
+ */
+- (void)downloadDataFromURL:(NSURL *)url withCompletionHandler:(void (^)(NSData *))completionHandler;
+
+@end
+
 @implementation WFClient
 
 - (id) init{
@@ -27,32 +51,32 @@
 }
 
 //  Determines current weather conditions
-- (NSData*) getCurrentWeatherForLocation:(NSString *)location{
+- (NSData*) getCurrentWeatherForLocation:(NSString *)locationPosition{
     
-    NSString *URLString = [self constructRequestWithBaseURL:WEATHER_API_LOCALWEATHER_URL forLocation:location withParams:[NSArray arrayWithObjects: WEATHER_API_PARAMS_CURRENT_CONDITIONS, nil]];
+    NSString *URLString = [self constructRequestWithBaseURL:WEATHER_API_LOCALWEATHER_URL forLocation:locationPosition withParams:[NSArray arrayWithObjects: WEATHER_API_PARAMS_CURRENT_CONDITIONS, nil]];
     NSData* downloadedData = [self initializeDownloadProcess:[NSURL URLWithString:URLString]];
     return downloadedData;
 }
 
 // Determines hourly forecast for all available days
-- (NSData*) getAverrageWeatherForLocation:(NSString *)location{
+- (NSData*) getAverrageWeatherForLocation:(NSString *)locationPosition{
 
-    NSString *URLString = [self constructRequestWithBaseURL:WEATHER_API_LOCALWEATHER_URL forLocation:location withParams:[NSArray arrayWithObjects: WEATHER_API_PARAMS_AVERRAGE, nil]];
+    NSString *URLString = [self constructRequestWithBaseURL:WEATHER_API_LOCALWEATHER_URL forLocation:locationPosition withParams:[NSArray arrayWithObjects: WEATHER_API_PARAMS_AVERRAGE, nil]];
     NSData* downloadedData = [self initializeDownloadProcess:[NSURL URLWithString:URLString]];
     return downloadedData;
 }
 
 // Determines average weather conditions for all available days
-- (NSData*) getHourlyWeatherForLocation:(NSString *)location{
+- (NSData*) getHourlyWeatherForLocation:(NSString *)locationPosition{
     
-    NSString *URLString = [self constructRequestWithBaseURL:WEATHER_API_LOCALWEATHER_URL forLocation:location withParams:[NSArray arrayWithObjects: WEATHER_API_PARAMS_HOURLY, nil]];
+    NSString *URLString = [self constructRequestWithBaseURL:WEATHER_API_LOCALWEATHER_URL forLocation:locationPosition withParams:[NSArray arrayWithObjects: WEATHER_API_PARAMS_HOURLY, nil]];
     NSData* downloadedData = [self initializeDownloadProcess:[NSURL URLWithString:URLString]];
     return downloadedData;
 }
 
 // Determines weather conditions for today for specified location
-- (NSData*) getTodayWeatherForLocation:(NSString *)location{
-    NSString *URLString = [self constructRequestWithBaseURL:WEATHER_API_LOCALWEATHER_URL forLocation:location withParams:[NSArray arrayWithObjects: WEATHER_API_PARAMS_TODAY_WEATHER, nil]];
+- (NSData*) getTodayWeatherForLocation:(NSString *)locationPosition{
+    NSString *URLString = [self constructRequestWithBaseURL:WEATHER_API_LOCALWEATHER_URL forLocation:locationPosition withParams:[NSArray arrayWithObjects: WEATHER_API_PARAMS_TODAY_WEATHER, nil]];
     NSData* downloadedData = [self initializeDownloadProcess:[NSURL URLWithString:URLString]];
     return downloadedData;
 }
@@ -64,6 +88,7 @@
     NSData* downloadedData = [self initializeDownloadProcess:[NSURL URLWithString:URLString]];
     return downloadedData;
 }
+
 
 - (NSData*) initializeDownloadProcess: (NSURL*) url{
     

@@ -20,6 +20,7 @@
 		4CA4CF741A934DA8008C28AD /* WFClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CA4CF731A934DA8008C28AD /* WFClient.m */; };
 		4CA4CF771A934DCF008C28AD /* WFManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CA4CF761A934DCF008C28AD /* WFManager.m */; };
 		4CC552381A95D8BF00797E51 /* WFJSONParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CC552371A95D8BF00797E51 /* WFJSONParser.m */; };
+		4CC5B9FF1A9DBC9700531E6D /* GeographyLocation.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CC5B9FE1A9DBC9700531E6D /* GeographyLocation.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -59,6 +60,8 @@
 		4CA4CF781A937469008C28AD /* WFRequestAPIStrings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WFRequestAPIStrings.h; sourceTree = "<group>"; };
 		4CC552361A95D8BF00797E51 /* WFJSONParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WFJSONParser.h; sourceTree = "<group>"; };
 		4CC552371A95D8BF00797E51 /* WFJSONParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WFJSONParser.m; sourceTree = "<group>"; };
+		4CC5B9FD1A9DBC9700531E6D /* GeographyLocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GeographyLocation.h; sourceTree = "<group>"; };
+		4CC5B9FE1A9DBC9700531E6D /* GeographyLocation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeographyLocation.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -119,6 +122,8 @@
 				4CA4CF6D1A93482A008C28AD /* WFDaily.m */,
 				4CA4CF691A934632008C28AD /* WFConditions.h */,
 				4CA4CF6A1A934632008C28AD /* WFConditions.m */,
+				4CC5B9FD1A9DBC9700531E6D /* GeographyLocation.h */,
+				4CC5B9FE1A9DBC9700531E6D /* GeographyLocation.m */,
 				4CA4CF361A932291008C28AD /* Images.xcassets */,
 				4CA4CF291A932291008C28AD /* Supporting Files */,
 			);
@@ -257,6 +262,7 @@
 				4CA4CF321A932291008C28AD /* ViewController.m in Sources */,
 				4CA4CF711A9348C6008C28AD /* WFLocation.m in Sources */,
 				4CC552381A95D8BF00797E51 /* WFJSONParser.m in Sources */,
+				4CC5B9FF1A9DBC9700531E6D /* GeographyLocation.m in Sources */,
 				4CA4CF2F1A932291008C28AD /* AppDelegate.m in Sources */,
 				4CA4CF6E1A93482A008C28AD /* WFDaily.m in Sources */,
 				4CA4CF2C1A932291008C28AD /* main.m in Sources */,

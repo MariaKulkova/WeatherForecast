@@ -10,4 +10,6 @@
 
 @implementation WFLocation
 
+@synthesize location, lastForecastUpdate, locationForecast;
+
 @end
