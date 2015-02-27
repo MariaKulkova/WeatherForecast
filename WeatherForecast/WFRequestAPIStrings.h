@@ -16,8 +16,8 @@
 
 #define WEATHER_API_PARAMS_REQUIRED @"key=%@&q=%@&format=json"
 #define WEATHER_API_PARAMS_CURRENT_CONDITIONS @"fx=no"
-#define WEATHER_API_PARAMS_TODAY_WEATHER @"tp=3&num_of_days=1"
-#define WEATHER_API_PARAMS_AVERRAGE @"tp=24&num_of_days=5&cc=no"
-#define WEATHER_API_PARAMS_HOURLY @"tp=3&num_of_days=5&cc=no"
+#define WEATHER_API_PARAMS_DATE @"date=%@"
+#define WEATHER_API_PARAMS_AVERRAGE @"tp=24&cc=no"
+#define WEATHER_API_PARAMS_HOURLY @"tp=3&cc=no"
 
 #endif

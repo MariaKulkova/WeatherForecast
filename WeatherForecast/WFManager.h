@@ -10,6 +10,7 @@
 #import "WFDaily.h"
 #import "WFClient.h"
 #import "WFLocation.h"
+#import "GeographyLocation.h"
 
 @interface WFManager : NSObject
 {
@@ -23,7 +24,7 @@
  @param location represents place where it is necessary to receive weather conditions
  @param completionHandler is a block which will be excuted when all necessary operation are performed
  */
-- (void) getForecastForLocation: (NSString*) location withCompletionHandler:(void (^)(WFLocation *))completionHandler;
+- (void) getForecastForLocation: (GeographyLocation*) location withCompletionHandler:(void (^)(WFLocation *))completionHandler;
 
 /**
  Organize receiving of locations sets which correspond to searching query

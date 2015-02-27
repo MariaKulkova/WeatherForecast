@@ -28,8 +28,18 @@
 - (NSString*) constructRequestWithBaseURL: (NSString*) baseURL forLocation: (NSString*) location withParams: (NSArray*) params;
 
 /**
+ Receives data from service
+ @param url represents url query for service with all necessary parameters
+ @param withCompletionHandler represents block which will be executed when downloading process is finished
  */
 - (void)downloadDataFromURL:(NSURL *)url withCompletionHandler:(void (^)(NSData *))completionHandler;
+
+/**
+ Constructs date parameter for service query
+ @param date represents date in standart format
+ @return string date parameter with valu in a right format: "date=yyyy-MM-dd"
+ */
+- (NSString*) constructDateParameter: (NSDate*) date;
 
 @end
 
@@ -74,11 +84,40 @@
     return downloadedData;
 }
 
-// Determines weather conditions for today for specified location
-- (NSData*) getTodayWeatherForLocation:(NSString *)locationPosition{
-    NSString *URLString = [self constructRequestWithBaseURL:WEATHER_API_LOCALWEATHER_URL forLocation:locationPosition withParams:[NSArray arrayWithObjects: WEATHER_API_PARAMS_TODAY_WEATHER, nil]];
+// Determines weather average conditions for a definite day for specified location
+- (NSData*) getAverageDayWeatherForLocation:(NSString *)locationPosition withDate:(NSDate *)date{
+    
+    NSString *URLString = [self constructRequestWithBaseURL:WEATHER_API_LOCALWEATHER_URL forLocation:locationPosition withParams:[NSArray arrayWithObjects: [self constructDateParameter:date], WEATHER_API_PARAMS_AVERRAGE, nil]];
     NSData* downloadedData = [self initializeDownloadProcess:[NSURL URLWithString:URLString]];
     return downloadedData;
+}
+
+// Determines weather hourly conditions for a definite day for specified location
+- (NSData*) getHourlyDayWeatherForLocation:(NSString *)locationPosition withDate:(NSDate *)date{
+    NSString *URLString = [self constructRequestWithBaseURL:WEATHER_API_LOCALWEATHER_URL forLocation:locationPosition withParams:[NSArray arrayWithObjects: [self constructDateParameter:date], WEATHER_API_PARAMS_HOURLY, nil]];
+    NSData* downloadedData = [self initializeDownloadProcess:[NSURL URLWithString:URLString]];
+    return downloadedData;
+}
+
+// Constructs date parameter for service query
+- (NSString*) constructDateParameter: (NSDate*) date{
+    
+    static NSDateFormatter *dateFormat = nil;
+    if (dateFormat == nil){
+        dateFormat = [[NSDateFormatter alloc] init];
+        [dateFormat setDateFormat:@"yyyy-MM-dd"];
+    }
+    
+    NSString* dateParameter;
+    @try {
+        NSString* dateWithFormat = [dateFormat stringFromDate:date];
+        dateParameter = [NSString stringWithFormat:WEATHER_API_PARAMS_DATE, dateWithFormat];
+    }
+    @catch (NSException *exception) {
+        NSLog(@"%@. Description: %@", exception.name, exception.description);
+    }
+    
+    return dateParameter;
 }
 
 // Determines locations which are the best suited to searching string
@@ -89,22 +128,29 @@
     return downloadedData;
 }
 
-
+// Initializes data downloading process
 - (NSData*) initializeDownloadProcess: (NSURL*) url{
     
     __block NSData* receivedData = [[NSData alloc] init];
-    [self downloadDataFromURL:url withCompletionHandler:^(NSData *data){
-        if (data != nil) {
-            receivedData = data;
-        }
-        
-        dispatch_semaphore_signal(dataDidLoadSemaphore);
-    }];
+    
+//    @try {
+        [self downloadDataFromURL:url withCompletionHandler:^(NSData *data){
+            if (data != nil) {
+                receivedData = data;
+            }
+            dispatch_semaphore_signal(dataDidLoadSemaphore);
+        }];
+//    }
+//    @catch (NSException *exception) {
+//        // notify controller that there are problems with service connection
+//        dispatch_semaphore_signal(dataDidLoadSemaphore);
+//    }
     
     dispatch_semaphore_wait(dataDidLoadSemaphore, DISPATCH_TIME_FOREVER);
     return receivedData;
 }
 
+// Makes query to service from specified parameters
 - (NSString*) constructRequestWithBaseURL: (NSString*) baseURL forLocation: (NSString*) location withParams: (NSArray*) params{
     
     NSString* requestString = baseURL;
@@ -118,8 +164,10 @@
     return requestString;
 }
 
+// Receives data from service
 - (void)downloadDataFromURL:(NSURL *)url withCompletionHandler:(void (^)(NSData *))completionHandler{
   
+    NSLog(@"Service query: %@", url);
     // Create a data task object to perform the data downloading.
     NSURLSessionDataTask *task = [URLSession dataTaskWithURL:url completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         
@@ -137,7 +185,7 @@
             
             // If it's other than 200, then show it on the console.
             if (HTTPStatusCode != 200) {
-                NSLog(@"HTTP status code = %d", HTTPStatusCode);
+                NSLog(@"HTTP status code = %ld", (long)HTTPStatusCode);
             }
             
             // Call the completion handler with the returned data on the main thread.

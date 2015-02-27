@@ -8,6 +8,11 @@
 
 #import <Foundation/Foundation.h>
 
+#define BASE_URL_KEY @"baseURL";
+#define LOCATION_KEY @"location";
+#define DATE_KEY @"date";
+#
+
 @interface WFClient : NSObject
 {
     // URL session for service interaction
@@ -39,11 +44,20 @@
 - (NSData*) getAverrageWeatherForLocation: (NSString*) locationPosition;
 
 /**
- Determines weather conditions for today for specified location
+ Determines weather average conditions for a definite day for specified location
  @param location represents place where it is necessary to determine weather conditions
- @return data in json-format that represents today weather conditions in definite location
+ @param date represents date for which it is necessary to receive forecast
+ @return data in json-format that represents average weather conditions in definite location and date
  */
-- (NSData*) getTodayWeatherForLocation: (NSString*) locationPosition;
+- (NSData*) getAverageDayWeatherForLocation: (NSString*) locationPosition withDate: (NSDate*) date;
+
+/**
+ Determines weather hourly conditions for a definite day for specified location
+ @param location represents place where it is necessary to determine weather conditions
+ @param date represents date for which it is necessary to receive forecast
+ @return data in json-format that represents hourly weather conditions in definite location and date
+ */
+- (NSData*) getHourlyDayWeatherForLocation: (NSString*) locationPosition withDate: (NSDate*) date;
 
 /**
  Determines locations which are the best suited to searching string

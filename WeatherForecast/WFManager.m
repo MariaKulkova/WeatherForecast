@@ -8,7 +8,6 @@
 
 #import "WFManager.h"
 #import "WFJSONParser.h"
-#import "GeographyLocation.h"
 
 @implementation WFManager
 

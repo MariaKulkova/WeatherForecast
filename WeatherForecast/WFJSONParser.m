@@ -32,6 +32,13 @@
  */
 + (NSMutableArray*) parseHourlyForecast: (NSMutableDictionary*) dataDictionary;
 
+/**
+ Parse json-dictionary received with a help of search API and construct geography location
+ @param dataDictionary represents an element of "result" section
+ @return GeographyLocation object which represents location
+ */
++ (GeographyLocation*) parseGeographyLocation: (NSMutableDictionary*) dataDictionary;
+
 @end
 
 @implementation WFJSONParser
@@ -55,7 +62,7 @@
             // receives current weather conditions
             dailyForecast.currentConditions = [WFJSONParser parseCurrentConditions:todayWeatherDictionary];
             // receives weather forecast by hours
-            dailyForecast.hourlyConditions = [WFJSONParser parseHourlyForecast:[todayWeatherDictionary objectForKey:@"hourly"]];
+            dailyForecast.hourlyConditions = [WFJSONParser parseHourlyForecast:todayWeatherDictionary];
         }
         @catch(NSException *exception){
             // throw exception about parsing errors
@@ -106,10 +113,10 @@
                 }
                 else{
                     // for other days average conditions are contained in hourly section but there is only one value in this section for a whole day
-                    dayWeather.currentConditions = [[WFJSONParser parseHourlyForecast:[currentDayAverage objectForKey:@"hourly"]] objectAtIndex:0];
+                    dayWeather.currentConditions = [[WFJSONParser parseHourlyForecast: currentDayAverage] objectAtIndex:0];
                 }
                 
-                dayWeather.hourlyConditions = [WFJSONParser parseHourlyForecast:[currentDayHourly objectForKey:@"hourly"]];
+                dayWeather.hourlyConditions = [WFJSONParser parseHourlyForecast:currentDayHourly];
                 
                 [forecastForLocation addObject:dayWeather];
             }
@@ -150,7 +157,9 @@
     return [NSArray arrayWithArray:locationsNames];
 }
 
+// Parse json-dictionary received with a help of search API and convert element of "result" section to geography location
 + (GeographyLocation*) parseGeographyLocation: (NSMutableDictionary*) dataDictionary{
+    
     GeographyLocation *location = [[GeographyLocation alloc] init];
     
     if (dataDictionary != nil){
@@ -190,7 +199,7 @@
     WFConditions *weatherConditions = [[WFConditions alloc] init];
     
     if (dataDictionary != nil){
-        weatherConditions.forcastDateTime = [dataDictionary objectForKey:@"time"];
+        weatherConditions.forcastDateTime = [WFJSONParser parseTime:[dataDictionary objectForKey:@"time"]];
         weatherConditions.weatherType = (WFWeatherType)[[dataDictionary objectForKey:@"weatherCode"] integerValue];
         weatherConditions.temperature = [[dataDictionary objectForKey:@"tempC"] doubleValue];
     }
@@ -205,13 +214,37 @@
 // Parse json-dictionary and construct hourly weather forecast
 + (NSMutableArray*) parseHourlyForecast: (NSMutableDictionary*) dataDictionary{
     
-    NSMutableArray *weatherForcastByHours = [[NSMutableArray alloc] init];
+    NSMutableArray* hourlyWeather = [dataDictionary objectForKey:@"hourly"];
     
-    for (NSMutableDictionary *weatherAtHour in dataDictionary) {
+    NSMutableArray *weatherForcastByHours = [[NSMutableArray alloc] init];
+    for (NSMutableDictionary *weatherAtHour in hourlyWeather) {
         [weatherForcastByHours addObject:[WFJSONParser parseHourlyConditions:weatherAtHour]];
     }
     
     return weatherForcastByHours;
+}
+
++ (NSDate*) parseTime: (NSString*) timeString{
+    
+    NSCalendar *calendar = [NSCalendar currentCalendar];
+    calendar.timeZone = [NSTimeZone timeZoneWithAbbreviation:@"GMT"];
+    NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
+    NSDate* date;
+    
+    int timeValue = [timeString integerValue];
+    int hours = timeValue / 100;
+    int minutes = timeValue % 100;
+    
+    if (hours > 23 || hours < 0 || minutes > 59 || minutes < 0){
+        date = nil;
+    }
+    else{
+        dateComponents.second = 0;
+        dateComponents.hour = hours;
+        dateComponents.minute = minutes;
+        date = [calendar dateFromComponents:dateComponents];
+    }
+    return date;
 }
 
 @end
