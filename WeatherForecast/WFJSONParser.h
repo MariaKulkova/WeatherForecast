@@ -11,6 +11,11 @@
 #import "WFLocation.h"
 #import "WFDaily.h"
 
+extern NSString* const JSONSerializationException;
+extern NSString* const LocationParsingException;
+extern NSString* const CurrentConditionsParsingException;
+extern NSString* const HourlyConditionsParsingException;
+
 @interface WFJSONParser : NSObject
 
 /**
@@ -29,7 +34,7 @@
  @param todayConditionsData represents today weather conditions specifically current conditions and hourly forecast with 3-hours time interval
  @return WFDaily object which corresponds to weather forecast for today
  */
-+ (WFDaily*) parseDailyForecast: (NSData*) todayConditionsData;
++ (WFDaily*) parseDailyForecast: (NSData*) dayConditionsData;
 
 /**
  Parses json object and convert results to location objects

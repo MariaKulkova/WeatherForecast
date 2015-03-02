@@ -21,6 +21,7 @@
 		4CA4CF771A934DCF008C28AD /* WFManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CA4CF761A934DCF008C28AD /* WFManager.m */; };
 		4CC552381A95D8BF00797E51 /* WFJSONParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CC552371A95D8BF00797E51 /* WFJSONParser.m */; };
 		4CC5B9FF1A9DBC9700531E6D /* GeographyLocation.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CC5B9FE1A9DBC9700531E6D /* GeographyLocation.m */; };
+		4CD3E3BA1AA45112002C0D55 /* JSONParseException.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CD3E3B91AA45112002C0D55 /* JSONParseException.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -62,6 +63,8 @@
 		4CC552371A95D8BF00797E51 /* WFJSONParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WFJSONParser.m; sourceTree = "<group>"; };
 		4CC5B9FD1A9DBC9700531E6D /* GeographyLocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GeographyLocation.h; sourceTree = "<group>"; };
 		4CC5B9FE1A9DBC9700531E6D /* GeographyLocation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeographyLocation.m; sourceTree = "<group>"; };
+		4CD3E3B81AA45112002C0D55 /* JSONParseException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSONParseException.h; sourceTree = "<group>"; };
+		4CD3E3B91AA45112002C0D55 /* JSONParseException.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSONParseException.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -103,6 +106,7 @@
 		4CA4CF281A932291008C28AD /* WeatherForecast */ = {
 			isa = PBXGroup;
 			children = (
+				4CD3E3B11AA44072002C0D55 /* Exceptions */,
 				4CA4CF621A934534008C28AD /* LaunchScreen.xib */,
 				4CA4CF631A934534008C28AD /* Main.storyboard */,
 				4CA4CF781A937469008C28AD /* WFRequestAPIStrings.h */,
@@ -154,6 +158,15 @@
 				4CA4CF441A932291008C28AD /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		4CD3E3B11AA44072002C0D55 /* Exceptions */ = {
+			isa = PBXGroup;
+			children = (
+				4CD3E3B81AA45112002C0D55 /* JSONParseException.h */,
+				4CD3E3B91AA45112002C0D55 /* JSONParseException.m */,
+			);
+			name = Exceptions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -261,6 +274,7 @@
 				4CA4CF771A934DCF008C28AD /* WFManager.m in Sources */,
 				4CA4CF321A932291008C28AD /* ViewController.m in Sources */,
 				4CA4CF711A9348C6008C28AD /* WFLocation.m in Sources */,
+				4CD3E3BA1AA45112002C0D55 /* JSONParseException.m in Sources */,
 				4CC552381A95D8BF00797E51 /* WFJSONParser.m in Sources */,
 				4CC5B9FF1A9DBC9700531E6D /* GeographyLocation.m in Sources */,
 				4CA4CF2F1A932291008C28AD /* AppDelegate.m in Sources */,

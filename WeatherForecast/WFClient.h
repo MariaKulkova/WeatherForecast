@@ -8,10 +8,12 @@
 
 #import <Foundation/Foundation.h>
 
-#define BASE_URL_KEY @"baseURL";
-#define LOCATION_KEY @"location";
-#define DATE_KEY @"date";
-#
+extern NSString* const WFClientErrorDomain;
+
+enum {
+    WFClientServiceConnectionError,
+    WFClientDataReceivingError
+};
 
 @interface WFClient : NSObject
 {

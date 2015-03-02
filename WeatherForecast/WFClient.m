@@ -9,6 +9,8 @@
 #import "WFClient.h"
 #import "WFRequestAPIStrings.h"
 
+NSString* const WFClientErrorDomain = @"WFClientErrorDomain";
+
 @interface WFClient ()
 
 /**
@@ -32,7 +34,7 @@
  @param url represents url query for service with all necessary parameters
  @param withCompletionHandler represents block which will be executed when downloading process is finished
  */
-- (void)downloadDataFromURL:(NSURL *)url withCompletionHandler:(void (^)(NSData *))completionHandler;
+- (void)downloadDataFromURL:(NSURL *)url withCompletionHandler:(void (^)(NSData *receivedData, NSError *occuredError))completionHandler;
 
 /**
  Constructs date parameter for service query
@@ -133,19 +135,25 @@
     
     __block NSData* receivedData = [[NSData alloc] init];
     
-//    @try {
-        [self downloadDataFromURL:url withCompletionHandler:^(NSData *data){
-            if (data != nil) {
+    @try {
+        
+        [self downloadDataFromURL:url withCompletionHandler:^(NSData *data, NSError *error){
+            // If some errors occured during downloading process
+            if (error != nil) {
+                // TODO: notify controller
+            }
+            else{
                 receivedData = data;
             }
             dispatch_semaphore_signal(dataDidLoadSemaphore);
         }];
-//    }
-//    @catch (NSException *exception) {
-//        // notify controller that there are problems with service connection
-//        dispatch_semaphore_signal(dataDidLoadSemaphore);
-//    }
-    
+    }
+    @catch (NSException *exception) {
+        
+        NSLog(@"Exception: %@. Reason: %@", exception.name, exception.reason);
+        dispatch_semaphore_signal(dataDidLoadSemaphore);
+    }
+
     dispatch_semaphore_wait(dataDidLoadSemaphore, DISPATCH_TIME_FOREVER);
     return receivedData;
 }
@@ -158,6 +166,7 @@
     // Add required location parameter
     requestString = [requestString stringByAppendingString:[NSString stringWithFormat:WEATHER_API_PARAMS_REQUIRED, WEATHER_API_FREE_KEY, location]];
     
+    // Parameters concatination with "&" symbol
     for (NSString* item in params) {
         requestString = [requestString stringByAppendingString:[NSString stringWithFormat:@"&%@", item]];
     }
@@ -165,19 +174,23 @@
 }
 
 // Receives data from service
-- (void)downloadDataFromURL:(NSURL *)url withCompletionHandler:(void (^)(NSData *))completionHandler{
+- (void)downloadDataFromURL:(NSURL *)url withCompletionHandler:(void (^)(NSData *receivedData, NSError *occuredError))completionHandler{
   
     NSLog(@"Service query: %@", url);
     // Create a data task object to perform the data downloading.
     NSURLSessionDataTask *task = [URLSession dataTaskWithURL:url completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         
+        // error for process result identifying
+        NSError *occuredError;
+        
         if (error != nil) {
+            
             // If any error occurs then just display its description on the console.
             NSLog(@"%@", [error localizedDescription]);
-            [[NSOperationQueue currentQueue] addOperationWithBlock:^{
-                completionHandler(nil);
-            }];
-
+            data = nil;
+            occuredError = [NSError errorWithDomain:WFClientErrorDomain
+                                               code:WFClientServiceConnectionError
+                                           userInfo:nil];
         }
         else{
             // If no error occurs, check the HTTP status code.
@@ -186,13 +199,15 @@
             // If it's other than 200, then show it on the console.
             if (HTTPStatusCode != 200) {
                 NSLog(@"HTTP status code = %ld", (long)HTTPStatusCode);
+                occuredError = [NSError errorWithDomain:WFClientErrorDomain
+                                                   code:WFClientDataReceivingError
+                                               userInfo:nil];
             }
-            
-            // Call the completion handler with the returned data on the main thread.
-            [[NSOperationQueue currentQueue] addOperationWithBlock:^{
-                completionHandler(data);
-            }];
         }
+        // Call the completion handler with the returned data and error state on the current thread.
+        [[NSOperationQueue currentQueue] addOperationWithBlock:^{
+            completionHandler(data, occuredError);
+        }];
     }];
     
     // Resume the task.
