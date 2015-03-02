@@ -19,6 +19,8 @@
 
 @implementation ViewController
 
+@synthesize managedObjectContext;
+
 - (id) init{
     if (self = [super init]){
         weatherForecastManager = [[WFManager alloc] init];

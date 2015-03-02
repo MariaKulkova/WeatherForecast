@@ -22,5 +22,7 @@
 
 @property (weak, nonatomic) IBOutlet UIButton *searchButton;
 
+@property (nonatomic,strong) NSManagedObjectContext* managedObjectContext;
+
 @end
 

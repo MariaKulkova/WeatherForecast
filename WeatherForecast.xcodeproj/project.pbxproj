@@ -22,6 +22,8 @@
 		4CC552381A95D8BF00797E51 /* WFJSONParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CC552371A95D8BF00797E51 /* WFJSONParser.m */; };
 		4CC5B9FF1A9DBC9700531E6D /* GeographyLocation.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CC5B9FE1A9DBC9700531E6D /* GeographyLocation.m */; };
 		4CD3E3BA1AA45112002C0D55 /* JSONParseException.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CD3E3B91AA45112002C0D55 /* JSONParseException.m */; };
+		4CD3E3BC1AA46FB5002C0D55 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CD3E3BB1AA46FB5002C0D55 /* CoreData.framework */; };
+		4CD3E3BF1AA46FEE002C0D55 /* WeatherForecastModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4CD3E3BD1AA46FEE002C0D55 /* WeatherForecastModel.xcdatamodeld */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -65,6 +67,8 @@
 		4CC5B9FE1A9DBC9700531E6D /* GeographyLocation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeographyLocation.m; sourceTree = "<group>"; };
 		4CD3E3B81AA45112002C0D55 /* JSONParseException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSONParseException.h; sourceTree = "<group>"; };
 		4CD3E3B91AA45112002C0D55 /* JSONParseException.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSONParseException.m; sourceTree = "<group>"; };
+		4CD3E3BB1AA46FB5002C0D55 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		4CD3E3BE1AA46FEE002C0D55 /* WeatherForecastModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = WeatherForecastModel.xcdatamodel; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,6 +76,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4CD3E3BC1AA46FB5002C0D55 /* CoreData.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -88,6 +93,7 @@
 		4CA4CF1D1A932291008C28AD = {
 			isa = PBXGroup;
 			children = (
+				4CD3E3BB1AA46FB5002C0D55 /* CoreData.framework */,
 				4CA4CF281A932291008C28AD /* WeatherForecast */,
 				4CA4CF421A932291008C28AD /* WeatherForecastTests */,
 				4CA4CF271A932291008C28AD /* Products */,
@@ -130,6 +136,7 @@
 				4CC5B9FE1A9DBC9700531E6D /* GeographyLocation.m */,
 				4CA4CF361A932291008C28AD /* Images.xcassets */,
 				4CA4CF291A932291008C28AD /* Supporting Files */,
+				4CD3E3BD1AA46FEE002C0D55 /* WeatherForecastModel.xcdatamodeld */,
 			);
 			path = WeatherForecast;
 			sourceTree = "<group>";
@@ -276,6 +283,7 @@
 				4CA4CF711A9348C6008C28AD /* WFLocation.m in Sources */,
 				4CD3E3BA1AA45112002C0D55 /* JSONParseException.m in Sources */,
 				4CC552381A95D8BF00797E51 /* WFJSONParser.m in Sources */,
+				4CD3E3BF1AA46FEE002C0D55 /* WeatherForecastModel.xcdatamodeld in Sources */,
 				4CC5B9FF1A9DBC9700531E6D /* GeographyLocation.m in Sources */,
 				4CA4CF2F1A932291008C28AD /* AppDelegate.m in Sources */,
 				4CA4CF6E1A93482A008C28AD /* WFDaily.m in Sources */,
@@ -467,6 +475,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		4CD3E3BD1AA46FEE002C0D55 /* WeatherForecastModel.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				4CD3E3BE1AA46FEE002C0D55 /* WeatherForecastModel.xcdatamodel */,
+			);
+			currentVersion = 4CD3E3BE1AA46FEE002C0D55 /* WeatherForecastModel.xcdatamodel */;
+			path = WeatherForecastModel.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 4CA4CF1E1A932291008C28AD /* Project object */;
 }
