@@ -7,9 +7,20 @@
 //
 
 #import "WFDaily.h"
+#import "WFManager.h"
 
 @implementation WFDaily
 
-@synthesize dayDate, currentConditions, hourlyConditions;
+@dynamic lastUpdated;
+@dynamic forecastDate;
+@dynamic currentCondition;
+@dynamic hourlyCondition;
+
+- (id) initWithEntity{
+    NSEntityDescription *entity = [NSEntityDescription entityForName:@"WFDaily"
+                                              inManagedObjectContext:[WFManager sharedWeatherManager].managedObjectContext];
+    self = [[WFDaily alloc] initWithEntity:entity insertIntoManagedObjectContext:nil];
+    return self;
+}
 
 @end

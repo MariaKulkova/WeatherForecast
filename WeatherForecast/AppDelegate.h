@@ -8,19 +8,13 @@
 
 #import <UIKit/UIKit.h>
 #import <CoreData/CoreData.h>
-
-extern NSString *const developerKey;
+#import "ViewController.h"
+#import "WFManager.h"
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
-
-@property (readonly, nonatomic, strong) NSManagedObjectModel *managedObjectModel;
-@property (readonly, nonatomic, strong) NSPersistentStoreCoordinator *persistentStoreCoordinator;
-@property (readonly, nonatomic, strong) NSManagedObjectContext *managedObjectContext;
-
-- (void)saveContext;
-- (NSURL *)applicationsDocumentsDirectory;
+@property (strong, nonatomic) ViewController *viewController;
 
 @end
 

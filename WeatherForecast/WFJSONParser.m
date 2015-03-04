@@ -54,7 +54,7 @@ NSString* const HourlyConditionsParsingException = @"HourlyConditionsParsingExce
 
     NSError *error;
     NSMutableDictionary *todayWeatherDictionary = [[NSJSONSerialization JSONObjectWithData:dayConditionsData options:kNilOptions error:&error] objectForKey:@"data"];
-    WFDaily *dailyForecast = [[WFDaily alloc] init];
+    WFDaily *dailyForecast = [[WFDaily alloc] initWithEntity];
     
     if (error != nil){
         // throw exception about json convertion
@@ -66,12 +66,12 @@ NSString* const HourlyConditionsParsingException = @"HourlyConditionsParsingExce
         
         @try{
             NSMutableDictionary *weatherForDay = [[todayWeatherDictionary objectForKey:@"weather"] objectAtIndex:0];
-            dailyForecast.dayDate = [weatherForDay objectForKey:@"date"];
+            dailyForecast.forecastDate = [weatherForDay objectForKey:@"date"];
             
             // receives current weather conditions
-            dailyForecast.currentConditions = [WFJSONParser parseCurrentConditions:todayWeatherDictionary];
+            dailyForecast.currentCondition = [WFJSONParser parseCurrentConditions:todayWeatherDictionary];
             // receives weather forecast by hours
-            dailyForecast.hourlyConditions = [WFJSONParser parseHourlyForecast:todayWeatherDictionary];
+            dailyForecast.hourlyCondition = [NSSet setWithArray:[WFJSONParser parseHourlyForecast:todayWeatherDictionary]];
         }
         @catch(JSONParseException *exception){
             // throw exception about parsing errors
@@ -117,19 +117,24 @@ NSString* const HourlyConditionsParsingException = @"HourlyConditionsParsingExce
             for (int i = 0; i < weatherAverage.count; i++) {
                 NSMutableDictionary *currentDayAverage = [weatherAverage objectAtIndex:i];
                 NSMutableDictionary *currentDayHourly = [weatherHourly objectAtIndex:i];
-                WFDaily *dayWeather = [[WFDaily alloc] init];
+                WFDaily *dayWeather = [[WFDaily alloc] initWithEntity];
                 
-                dayWeather.dayDate = [currentDayAverage objectForKey:@"date"];
+                NSString *str = [currentDayAverage objectForKey:@"date"];
+                // Convert string to date object
+                NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
+                [dateFormat setDateFormat:@"yyyy-MM-dd"];
+                dayWeather.forecastDate = [dateFormat dateFromString:str];
+                
                 // for today current conditions are not average. They are contained in special section
                 if (i == 0){
-                    dayWeather.currentConditions = [WFJSONParser parseCurrentConditions:currentConditions];
+                    dayWeather.currentCondition = [WFJSONParser parseCurrentConditions:currentConditions];
                 }
                 else{
                     // for other days average conditions are contained in hourly section but there is only one value in this section for a whole day
-                    dayWeather.currentConditions = [[WFJSONParser parseHourlyForecast: currentDayAverage] objectAtIndex:0];
+                    dayWeather.currentCondition = [[WFJSONParser parseHourlyForecast: currentDayAverage] objectAtIndex:0];
                 }
                 
-                dayWeather.hourlyConditions = [WFJSONParser parseHourlyForecast:currentDayHourly];
+                dayWeather.hourlyCondition = [NSSet setWithArray:[WFJSONParser parseHourlyForecast:currentDayHourly]];
                 
                 [forecastForLocation addObject:dayWeather];
             }
@@ -179,7 +184,7 @@ NSString* const HourlyConditionsParsingException = @"HourlyConditionsParsingExce
 // Parse json-dictionary received with a help of search API and convert element of "result" section to geography location
 + (GeographyLocation*) parseGeographyLocation: (NSMutableDictionary*) dataDictionary{
     
-    GeographyLocation *location = [[GeographyLocation alloc] init];
+    GeographyLocation *location = [[GeographyLocation alloc] initWithEntity];
     
     if (dataDictionary != nil){
         
@@ -207,15 +212,18 @@ NSString* const HourlyConditionsParsingException = @"HourlyConditionsParsingExce
 // Parse json-dictionary and convert section of "current_conditions" to WFConditions object
 + (WFConditions*) parseCurrentConditions: (NSMutableDictionary*) dataDictionary{
     
-    WFConditions* weatherConditions = [[WFConditions alloc] init];
+    WFConditions* weatherConditions = [[WFConditions alloc] initWithEntity];
     @try {
         
         NSMutableDictionary *currentConditions = [[dataDictionary objectForKey:@"current_condition"] objectAtIndex:0];
         
         if (currentConditions != nil){
-            weatherConditions.forcastDateTime = [currentConditions objectForKey:@"observation_time"];
-            weatherConditions.weatherType = (WFWeatherType)[[currentConditions objectForKey:@"weatherCode"] integerValue];
-            weatherConditions.temperature = [[currentConditions objectForKey:@"temp_C"] doubleValue];
+            NSString *str = [currentConditions objectForKey:@"observation_time"];
+            NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+            [dateFormatter setDateFormat:@"hh:mm a"];
+            weatherConditions.time = [dateFormatter dateFromString:str];
+            weatherConditions.weatherType = [NSNumber numberWithInt:[[currentConditions objectForKey:@"weatherCode"] integerValue]];
+            weatherConditions.temperature = [NSNumber numberWithDouble:[[currentConditions objectForKey:@"temp_C"] doubleValue]];
         }
         else{
             weatherConditions = nil;
@@ -236,13 +244,13 @@ NSString* const HourlyConditionsParsingException = @"HourlyConditionsParsingExce
 // Parse json-dictionary and construct conditions object
 + (WFConditions*) parseHourlyConditions: (NSMutableDictionary*) dataDictionary{
     
-    WFConditions *weatherConditions = [[WFConditions alloc] init];
+    WFConditions *weatherConditions = [[WFConditions alloc] initWithEntity];
     
     if (dataDictionary != nil){
         @try {
-            weatherConditions.forcastDateTime = [WFJSONParser parseTime:[dataDictionary objectForKey:@"time"]];
-            weatherConditions.weatherType = (WFWeatherType)[[dataDictionary objectForKey:@"weatherCode"] integerValue];
-            weatherConditions.temperature = [[dataDictionary objectForKey:@"tempC"] doubleValue];
+            weatherConditions.time = [WFJSONParser parseTime:[dataDictionary objectForKey:@"time"]];
+            weatherConditions.weatherType = [NSNumber numberWithInt:[[dataDictionary objectForKey:@"weatherCode"] integerValue]];
+            weatherConditions.temperature = [NSNumber numberWithInt:[[dataDictionary objectForKey:@"tempC"] doubleValue]];
         }
         @catch (NSException *exception) {
             

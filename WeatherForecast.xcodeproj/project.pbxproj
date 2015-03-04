@@ -19,6 +19,8 @@
 		4CA4CF711A9348C6008C28AD /* WFLocation.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CA4CF701A9348C6008C28AD /* WFLocation.m */; };
 		4CA4CF741A934DA8008C28AD /* WFClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CA4CF731A934DA8008C28AD /* WFClient.m */; };
 		4CA4CF771A934DCF008C28AD /* WFManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CA4CF761A934DCF008C28AD /* WFManager.m */; };
+		4CC036B21AA70717004D7993 /* WFRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CC036B11AA70717004D7993 /* WFRequest.m */; };
+		4CC036B51AA7131A004D7993 /* RequestQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CC036B41AA7131A004D7993 /* RequestQueue.m */; };
 		4CC552381A95D8BF00797E51 /* WFJSONParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CC552371A95D8BF00797E51 /* WFJSONParser.m */; };
 		4CC5B9FF1A9DBC9700531E6D /* GeographyLocation.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CC5B9FE1A9DBC9700531E6D /* GeographyLocation.m */; };
 		4CD3E3BA1AA45112002C0D55 /* JSONParseException.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CD3E3B91AA45112002C0D55 /* JSONParseException.m */; };
@@ -61,6 +63,11 @@
 		4CA4CF751A934DCF008C28AD /* WFManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WFManager.h; sourceTree = "<group>"; };
 		4CA4CF761A934DCF008C28AD /* WFManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WFManager.m; sourceTree = "<group>"; };
 		4CA4CF781A937469008C28AD /* WFRequestAPIStrings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WFRequestAPIStrings.h; sourceTree = "<group>"; };
+		4CC036B01AA70717004D7993 /* WFRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WFRequest.h; sourceTree = "<group>"; };
+		4CC036B11AA70717004D7993 /* WFRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WFRequest.m; sourceTree = "<group>"; };
+		4CC036B31AA7131A004D7993 /* RequestQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RequestQueue.h; sourceTree = "<group>"; };
+		4CC036B41AA7131A004D7993 /* RequestQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RequestQueue.m; sourceTree = "<group>"; };
+		4CC036BA1AA74335004D7993 /* NotificationConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NotificationConstants.h; sourceTree = "<group>"; };
 		4CC552361A95D8BF00797E51 /* WFJSONParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WFJSONParser.h; sourceTree = "<group>"; };
 		4CC552371A95D8BF00797E51 /* WFJSONParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WFJSONParser.m; sourceTree = "<group>"; };
 		4CC5B9FD1A9DBC9700531E6D /* GeographyLocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GeographyLocation.h; sourceTree = "<group>"; };
@@ -112,31 +119,15 @@
 		4CA4CF281A932291008C28AD /* WeatherForecast */ = {
 			isa = PBXGroup;
 			children = (
-				4CD3E3B11AA44072002C0D55 /* Exceptions */,
-				4CA4CF621A934534008C28AD /* LaunchScreen.xib */,
-				4CA4CF631A934534008C28AD /* Main.storyboard */,
-				4CA4CF781A937469008C28AD /* WFRequestAPIStrings.h */,
-				4CA4CF721A934DA8008C28AD /* WFClient.h */,
-				4CA4CF731A934DA8008C28AD /* WFClient.m */,
-				4CA4CF751A934DCF008C28AD /* WFManager.h */,
-				4CA4CF761A934DCF008C28AD /* WFManager.m */,
-				4CC552361A95D8BF00797E51 /* WFJSONParser.h */,
-				4CC552371A95D8BF00797E51 /* WFJSONParser.m */,
 				4CA4CF2D1A932291008C28AD /* AppDelegate.h */,
 				4CA4CF2E1A932291008C28AD /* AppDelegate.m */,
-				4CA4CF301A932291008C28AD /* ViewController.h */,
-				4CA4CF311A932291008C28AD /* ViewController.m */,
-				4CA4CF6F1A9348C6008C28AD /* WFLocation.h */,
-				4CA4CF701A9348C6008C28AD /* WFLocation.m */,
-				4CA4CF6C1A93482A008C28AD /* WFDaily.h */,
-				4CA4CF6D1A93482A008C28AD /* WFDaily.m */,
-				4CA4CF691A934632008C28AD /* WFConditions.h */,
-				4CA4CF6A1A934632008C28AD /* WFConditions.m */,
-				4CC5B9FD1A9DBC9700531E6D /* GeographyLocation.h */,
-				4CC5B9FE1A9DBC9700531E6D /* GeographyLocation.m */,
+				4CC036B71AA7425E004D7993 /* Controllers */,
+				4CC036B61AA7422B004D7993 /* Objects model */,
+				4CC036B91AA742DB004D7993 /* Views */,
+				4CC036B81AA742A0004D7993 /* Service interaction back-end */,
+				4CD3E3B11AA44072002C0D55 /* Exceptions */,
 				4CA4CF361A932291008C28AD /* Images.xcassets */,
 				4CA4CF291A932291008C28AD /* Supporting Files */,
-				4CD3E3BD1AA46FEE002C0D55 /* WeatherForecastModel.xcdatamodeld */,
 			);
 			path = WeatherForecast;
 			sourceTree = "<group>";
@@ -165,6 +156,59 @@
 				4CA4CF441A932291008C28AD /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		4CC036B61AA7422B004D7993 /* Objects model */ = {
+			isa = PBXGroup;
+			children = (
+				4CD3E3BD1AA46FEE002C0D55 /* WeatherForecastModel.xcdatamodeld */,
+				4CA4CF6F1A9348C6008C28AD /* WFLocation.h */,
+				4CA4CF701A9348C6008C28AD /* WFLocation.m */,
+				4CA4CF6C1A93482A008C28AD /* WFDaily.h */,
+				4CA4CF6D1A93482A008C28AD /* WFDaily.m */,
+				4CA4CF691A934632008C28AD /* WFConditions.h */,
+				4CA4CF6A1A934632008C28AD /* WFConditions.m */,
+				4CC5B9FD1A9DBC9700531E6D /* GeographyLocation.h */,
+				4CC5B9FE1A9DBC9700531E6D /* GeographyLocation.m */,
+			);
+			name = "Objects model";
+			sourceTree = "<group>";
+		};
+		4CC036B71AA7425E004D7993 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				4CA4CF301A932291008C28AD /* ViewController.h */,
+				4CA4CF311A932291008C28AD /* ViewController.m */,
+			);
+			name = Controllers;
+			sourceTree = "<group>";
+		};
+		4CC036B81AA742A0004D7993 /* Service interaction back-end */ = {
+			isa = PBXGroup;
+			children = (
+				4CA4CF781A937469008C28AD /* WFRequestAPIStrings.h */,
+				4CC036BA1AA74335004D7993 /* NotificationConstants.h */,
+				4CA4CF721A934DA8008C28AD /* WFClient.h */,
+				4CA4CF731A934DA8008C28AD /* WFClient.m */,
+				4CA4CF751A934DCF008C28AD /* WFManager.h */,
+				4CA4CF761A934DCF008C28AD /* WFManager.m */,
+				4CC552361A95D8BF00797E51 /* WFJSONParser.h */,
+				4CC552371A95D8BF00797E51 /* WFJSONParser.m */,
+				4CC036B01AA70717004D7993 /* WFRequest.h */,
+				4CC036B11AA70717004D7993 /* WFRequest.m */,
+				4CC036B31AA7131A004D7993 /* RequestQueue.h */,
+				4CC036B41AA7131A004D7993 /* RequestQueue.m */,
+			);
+			name = "Service interaction back-end";
+			sourceTree = "<group>";
+		};
+		4CC036B91AA742DB004D7993 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				4CA4CF621A934534008C28AD /* LaunchScreen.xib */,
+				4CA4CF631A934534008C28AD /* Main.storyboard */,
+			);
+			name = Views;
 			sourceTree = "<group>";
 		};
 		4CD3E3B11AA44072002C0D55 /* Exceptions */ = {
@@ -277,6 +321,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4CA4CF6B1A934632008C28AD /* WFConditions.m in Sources */,
+				4CC036B51AA7131A004D7993 /* RequestQueue.m in Sources */,
 				4CA4CF741A934DA8008C28AD /* WFClient.m in Sources */,
 				4CA4CF771A934DCF008C28AD /* WFManager.m in Sources */,
 				4CA4CF321A932291008C28AD /* ViewController.m in Sources */,
@@ -287,6 +332,7 @@
 				4CC5B9FF1A9DBC9700531E6D /* GeographyLocation.m in Sources */,
 				4CA4CF2F1A932291008C28AD /* AppDelegate.m in Sources */,
 				4CA4CF6E1A93482A008C28AD /* WFDaily.m in Sources */,
+				4CC036B21AA70717004D7993 /* WFRequest.m in Sources */,
 				4CA4CF2C1A932291008C28AD /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

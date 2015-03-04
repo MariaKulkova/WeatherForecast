@@ -11,26 +11,64 @@
 #import "WFClient.h"
 #import "WFLocation.h"
 #import "GeographyLocation.h"
+#import "NotificationConstants.h"
 
 @interface WFManager : NSObject
 {
-    NSCache *forecastCache;
+    NSMutableArray *forecastCache;
+    
+    NSMutableArray *requestsQueue;
     
     WFClient* weatherServiceClient;
+    
+    dispatch_semaphore_t forecastCacheSemaphor;
+    
+    dispatch_semaphore_t requestsQueueSemaphor;
 }
 
+@property (readonly, nonatomic, strong) NSManagedObjectModel *managedObjectModel;
+
+@property (readonly, nonatomic, strong) NSPersistentStoreCoordinator *persistentStoreCoordinator;
+
+@property (readonly, nonatomic, strong) NSManagedObjectContext *managedObjectContext;
+
++ (WFManager*) sharedWeatherManager;
+
 /**
- Organize receiving weather forecast for specified location from service
+ Organize receiving weather forecast for specified date in definite location from service
+ @param forecastDate represents date for which forecast must be received
  @param location represents place where it is necessary to receive weather conditions
- @param completionHandler is a block which will be excuted when all necessary operation are performed
+ @return weather forecast for specified date in location if this data exists in memory.
+         Otherwise, it returns nil.
  */
-- (void) getForecastForLocation: (GeographyLocation*) location withCompletionHandler:(void (^)(WFLocation *))completionHandler;
+- (WFDaily*) getForecastForDay: (int) dayIndex inLocation: (GeographyLocation*) location;
+
+/**
+ Organize weather forecast updating for specified date in definite location from service
+ @param forecastDate represents date for which forecast must be updated
+ @param location represents place where it is necessary to update weather conditions
+ */
+- (void) updateForecastForDay: (int) dayIndex inLocation: (GeographyLocation*) location;
+
+/**
+ Organize weather forecast updating for specified date in definite location from service
+ @param location represents place where it is necessary to update weather conditions
+ */
+- (void) updateForecastForLocation: (GeographyLocation*) location;
 
 /**
  Organize receiving of locations sets which correspond to searching query
  @param searchingWord represents name of locations which must be shown
-@param completionHandler is a block which will be excuted when all necessary operation are performed
+ @param completionHandler is a block which will be excuted when all necessary operation are performed
  */
 - (void) getLocationsForSearchingWord: (NSString*) searchingWord withCompletionHandler:(void (^)(NSArray *))completionHandler;
+
+- (void) saveCoreDataContext;
+
+- (void) insertDataToContext: (WFLocation*) locationForecast;
+
+//- (void) readDataFromDB;
+
+- (NSURL *) applicationDocumentsDirectory;
 
 @end

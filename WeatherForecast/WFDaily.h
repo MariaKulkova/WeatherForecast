@@ -7,14 +7,31 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <CoreData/CoreData.h>
 #import "WFConditions.h"
 
-@interface WFDaily : NSObject
+@interface WFDaily : NSManagedObject
 
-@property (strong, nonatomic) NSDate *dayDate;
+@property (strong, nonatomic) NSDate *lastUpdated;
 
-@property (strong, nonatomic) WFConditions *currentConditions;
+@property (strong, nonatomic) NSDate *forecastDate;
 
-@property (strong, nonatomic) NSArray *hourlyConditions;
+@property (strong, nonatomic) WFConditions *currentCondition;
+
+@property (strong, nonatomic) NSSet *hourlyCondition;
+
+- (id) initWithEntity;
+
+@end
+
+@interface WFDaily (CoreDataGeneratedAccessors)
+
+- (void)addHourlyConditionObject:(WFConditions *)value;
+
+- (void)removeHourlyConditionObject:(WFConditions *)value;
+
+- (void)addHourlyCondition:(NSSet *)values;
+
+- (void)removeHourlyCondition:(NSSet *)values;
 
 @end

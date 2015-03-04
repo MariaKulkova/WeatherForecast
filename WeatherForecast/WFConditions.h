@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <CoreData/CoreData.h>
 
 typedef enum{
     
@@ -61,12 +62,14 @@ typedef enum{
 }WFWeatherType;
 
 
-@interface WFConditions : NSObject
+@interface WFConditions : NSManagedObject
 
-@property (strong, nonatomic) NSDate *forcastDateTime;
+@property (strong, nonatomic) NSDate *time;
 
-@property (nonatomic) double temperature;
+@property (nonatomic) NSNumber *temperature;
 
-@property (nonatomic) WFWeatherType weatherType;
+@property (nonatomic) NSNumber *weatherType;
+
+- (id) initWithEntity;
 
 @end

@@ -1,26 +1,31 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="6254" systemVersion="14A389" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
-    <entity name="Condition" syncable="YES">
-        <attribute name="temperature" optional="YES" attributeType="Double" minValueString="-273" defaultValueString="0.0" syncable="YES"/>
-        <attribute name="time" optional="YES" attributeType="Date" syncable="YES"/>
-        <attribute name="weatherCode" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
-    </entity>
-    <entity name="DailyForecast" syncable="YES"/>
-    <entity name="Day" syncable="YES">
-        <attribute name="date" optional="YES" attributeType="Date" syncable="YES"/>
-    </entity>
-    <entity name="Location" syncable="YES">
+    <entity name="GeographyLocation" representedClassName="GeographyLocation" syncable="YES">
         <attribute name="areaName" optional="YES" attributeType="String" maxValueString="200" syncable="YES"/>
         <attribute name="country" optional="YES" attributeType="String" maxValueString="200" syncable="YES"/>
         <attribute name="latitude" optional="YES" attributeType="String" maxValueString="10" syncable="YES"/>
         <attribute name="longitude" optional="YES" attributeType="String" maxValueString="10" syncable="YES"/>
     </entity>
-    <entity name="LocationForecast" syncable="YES"/>
+    <entity name="WFConditions" representedClassName="WFConditions" syncable="YES">
+        <attribute name="temperature" optional="YES" attributeType="Double" minValueString="-273" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="time" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="weatherType" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+    </entity>
+    <entity name="WFDaily" representedClassName="WFDaily" syncable="YES">
+        <attribute name="forecastDate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="lastUpdated" optional="YES" attributeType="Date" syncable="YES"/>
+        <relationship name="currentCondition" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WFConditions" syncable="YES"/>
+        <relationship name="hourlyCondition" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="WFConditions" syncable="YES"/>
+    </entity>
+    <entity name="WFLocation" representedClassName="WFLocation" syncable="YES">
+        <attribute name="lastUpdate" optional="YES" attributeType="Date" syncable="YES"/>
+        <relationship name="location" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="GeographyLocation" syncable="YES"/>
+        <relationship name="locationForecast" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="WFDaily" syncable="YES"/>
+    </entity>
     <elements>
-        <element name="Location" positionX="9844" positionY="5387" width="128" height="103"/>
-        <element name="Condition" positionX="9835" positionY="5231" width="128" height="88"/>
-        <element name="Day" positionX="10042" positionY="5238" width="128" height="58"/>
-        <element name="DailyForecast" positionX="10213" positionY="5238" width="128" height="43"/>
-        <element name="LocationForecast" positionX="10071" positionY="5382" width="128" height="43"/>
+        <element name="GeographyLocation" positionX="9844" positionY="5387" width="128" height="103"/>
+        <element name="WFConditions" positionX="9835" positionY="5231" width="128" height="88"/>
+        <element name="WFDaily" positionX="10033" positionY="5202" width="128" height="103"/>
+        <element name="WFLocation" positionX="10053" positionY="5391" width="128" height="88"/>
     </elements>
 </model>

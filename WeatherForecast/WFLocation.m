@@ -7,9 +7,19 @@
 //
 
 #import "WFLocation.h"
+#import "WFManager.h"
 
 @implementation WFLocation
 
-@synthesize location, lastForecastUpdate, locationForecast;
+@dynamic lastUpdate;
+@dynamic location;
+@dynamic locationForecast;
+
+- (id) initWithEntity{
+    NSEntityDescription *entity = [NSEntityDescription entityForName:@"WFLocation"
+                                              inManagedObjectContext:[WFManager sharedWeatherManager].managedObjectContext];
+    self = [[WFLocation alloc] initWithEntity:entity insertIntoManagedObjectContext:nil];
+    return self;
+}
 
 @end

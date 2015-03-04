@@ -7,8 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <CoreData/CoreData.h>
 
-@interface GeographyLocation : NSObject
+@interface GeographyLocation : NSManagedObject
 
 /// Name of location
 @property(strong, nonatomic) NSString* areaName;
@@ -21,6 +22,10 @@
 
 /// Represents longitude part of location's geographic coordinates
 @property(strong, nonatomic) NSString* longitude;
+
+- (id) initWithEntity;
+
+- (BOOL)isEqualToLocation:(GeographyLocation *)location;
 
 /**
  Makes location position string for service interaction by latitude and longitude concatination

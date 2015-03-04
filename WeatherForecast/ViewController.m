@@ -56,20 +56,20 @@
         location.latitude = @"47.221";
         location.longitude = @"38.909";
         
-        [weatherForecastManager getForecastForLocation:location withCompletionHandler:^(WFLocation *locationForecast) {
-            
-            // Check if any data returned.
-            if (locationForecast != nil) {
-                WFDaily *today = [locationForecast.locationForecast objectAtIndex:0];
-                NSLog(@"Temperature in %@ is %f C", locationForecast.location.areaName, today.currentConditions.temperature);
-            }
-        }];
-//
-//        [weatherForecastManager getLocationsForSearchingWord:self.townName withCompletionHandler:^(NSArray *locationsList) {
-//            if (locationsList != nil){
-//                NSLog(@"%@", locationsList);
+//        [weatherForecastManager getForecastForLocation:location withCompletionHandler:^(WFLocation *locationForecast) {
+//            
+//            // Check if any data returned.
+//            if (locationForecast != nil) {
+//                WFDaily *today = [locationForecast.locationForecast.allObjects objectAtIndex:0];
+//                NSLog(@"Temperature in %@ is %@ C", locationForecast.location.areaName, today.currentCondition.temperature);
 //            }
 //        }];
+////
+////        [weatherForecastManager getLocationsForSearchingWord:self.townName withCompletionHandler:^(NSArray *locationsList) {
+////            if (locationsList != nil){
+////                NSLog(@"%@", locationsList);
+////            }
+////        }];
     });
 }
 
