@@ -141,6 +141,7 @@ NSString* const WFClientErrorDomain = @"WFClientErrorDomain";
             // If some errors occured during downloading process
             if (error != nil) {
                 // TODO: notify controller
+                NSLog(@"%@", error);
             }
             else{
                 receivedData = data;

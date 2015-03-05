@@ -107,7 +107,17 @@
 
 - (void) insertDataToContext:(WFLocation *)locationForecast{
     
+    // We must save objects from root of graph hierachy to its leaves
     [self.managedObjectContext insertObject:locationForecast];
+    [self.managedObjectContext insertObject:locationForecast.location];
+    for (WFDaily *item in locationForecast.locationForecast){
+        [self.managedObjectContext insertObject:item];
+        [self.managedObjectContext insertObject:item.currentCondition];
+        for (WFConditions *condition in item.hourlyCondition){
+            [self.managedObjectContext insertObject:condition];
+        }
+    }
+
     NSError *error = nil;
     if (![self.managedObjectContext save:&error]) {
         //Respond to the error
@@ -119,6 +129,7 @@
 - (NSArray*) readDataFromDataBase{
     
     NSManagedObjectContext *context = [self managedObjectContext];
+    
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
     NSEntityDescription *entity = [NSEntityDescription entityForName:@"WFLocation"
                                               inManagedObjectContext:context];
@@ -139,6 +150,9 @@
     // create asynchronous block for data updating
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
         
+        NSManagedObjectContext *tmpContext = [[NSManagedObjectContext alloc] init];
+        tmpContext.persistentStoreCoordinator = self.persistentStoreCoordinator;
+    
         // check whether current location has already had forecast in forecastCache
         dispatch_semaphore_wait(forecastCacheSemaphor, DISPATCH_TIME_FOREVER);
         
@@ -152,7 +166,7 @@
         }
         
         dispatch_semaphore_signal(forecastCacheSemaphor);
-    
+        
         @try {
             
             // receive json-data from service
@@ -274,7 +288,7 @@
     NSArray *dailyForecast = locationForecast.locationForecast.allObjects;
     WFDaily *dayWeather = [dailyForecast objectAtIndex:dayIndex];
 //    for (WFDaily *item in dailyForecast){
-//        if (item.forecastDate isEqual:forecastDate]){
+//        if ([item.forecastDate isEqual:forecastDate]){
 //            dayWeather = item;
 //        }
 //    }
