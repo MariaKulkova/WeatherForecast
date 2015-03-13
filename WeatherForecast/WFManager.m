@@ -9,20 +9,20 @@
 #import "WFManager.h"
 #import "WFJSONParser.h"
 #import "WFRequest.h"
+#import "CoreDataHelper.h"
 
 @implementation WFManager
 
-@synthesize managedObjectContext = _managedObjectContext;
-@synthesize managedObjectModel = _managedObjectModel;
-@synthesize persistentStoreCoordinator = _persistentStoreCoordinator;
-
 - (id) init{
     if (self = [super init]){
+        
         forecastCache = [[NSMutableArray alloc] init];
         requestsQueue = [[NSMutableArray alloc] init];
         weatherServiceClient = [[WFClient alloc] init];
         forecastCacheSemaphor = dispatch_semaphore_create(1);
         requestsQueueSemaphor = dispatch_semaphore_create(1);
+        
+        // receive data from data base
         @try {
             [forecastCache addObjectsFromArray:[self readDataFromDataBase]];
         }
@@ -43,92 +43,18 @@
     return sharedWeatherManager;
 }
 
-#pragma mark - CoreDataProperties
-
-- (NSManagedObjectModel *) managedObjectModel {
-    if (_managedObjectModel != nil){
-        return _managedObjectModel;
-    }
-    
-    NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@"WeatherForecastModel" withExtension:@"momd"];
-    _managedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
-    
-    return _managedObjectModel;
-}
-
-- (NSPersistentStoreCoordinator *) persistentStoreCoordinator {
-    if(_persistentStoreCoordinator != nil){
-        return _persistentStoreCoordinator;
-    }
-    
-    NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"WeatherForecastApp.sqlite"];
-    
-    NSError *error = nil;
-    _persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel: [self managedObjectModel]];
-    if(![_persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeURL options:nil error:&error]){
-        NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-        abort();
-    }
-    
-    return _persistentStoreCoordinator;
-}
-
-- (NSManagedObjectContext *) managedObjectContext {
-    if(_managedObjectContext != nil){
-        return _managedObjectContext;
-    }
-    
-    NSPersistentStoreCoordinator *coordinator = [self persistentStoreCoordinator];
-    if(coordinator != nil){
-        _managedObjectContext = [[NSManagedObjectContext alloc] init];
-        [_managedObjectContext setPersistentStoreCoordinator:coordinator];
-    }
-    
-    return _managedObjectContext;
-}
-
 #pragma mark - CoreDataMethods
 
 - (NSURL *) applicationDocumentsDirectory{
     return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
 }
 
-- (void) saveCoreDataContext {
-    NSError *error = nil;
-    NSManagedObjectContext *managedObjectContext = [self managedObjectContext];
-    
-    if(managedObjectContext != nil) {
-        if([managedObjectContext hasChanges] && ![managedObjectContext save:&error]){
-            NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-            abort();
-        }
-    }
-}
-
-- (void) insertDataToContext:(WFLocation *)locationForecast{
-    
-    // We must save objects from root of graph hierachy to its leaves
-    [self.managedObjectContext insertObject:locationForecast];
-    [self.managedObjectContext insertObject:locationForecast.location];
-    for (WFDaily *item in locationForecast.locationForecast){
-        [self.managedObjectContext insertObject:item];
-        [self.managedObjectContext insertObject:item.currentCondition];
-        for (WFConditions *condition in item.hourlyCondition){
-            [self.managedObjectContext insertObject:condition];
-        }
-    }
-
-    NSError *error = nil;
-    if (![self.managedObjectContext save:&error]) {
-        //Respond to the error
-        NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-        abort();
-    }
-}
-
+// reads weather forecasts for locations from data base
 - (NSArray*) readDataFromDataBase{
     
-    NSManagedObjectContext *context = [self managedObjectContext];
+    // receive current context (for current thread)
+    NSManagedObjectContext *context = [CoreDataHelper getCurrentContext];
+    
     
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
     NSEntityDescription *entity = [NSEntityDescription entityForName:@"WFLocation"
@@ -138,6 +64,7 @@
     NSArray *fetchedData = [context executeFetchRequest:fetchRequest error:&error];
     if (error != nil) {
         // data base reading problems
+        NSLog(@"Unresolved error: %@. %@", error, [error userInfo]);
         fetchedData = nil;
     }
     return fetchedData;
@@ -145,29 +72,42 @@
 
 #pragma mark - ManagerServiceInteraction
 
+// Organize weather forecast updating for specified date in definite location from service
 - (void) updateForecastForLocation:(GeographyLocation *)location{
     
     // create asynchronous block for data updating
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-        
-        NSManagedObjectContext *tmpContext = [[NSManagedObjectContext alloc] init];
-        tmpContext.persistentStoreCoordinator = self.persistentStoreCoordinator;
     
-        // check whether current location has already had forecast in forecastCache
-        dispatch_semaphore_wait(forecastCacheSemaphor, DISPATCH_TIME_FOREVER);
+        [[NSThread currentThread] setName:[[NSUUID UUID] UUIDString]];
         
-        // determines whether object is contained in cache
+        // receive context for current thread
+        NSManagedObjectContext *managedContext = [CoreDataHelper getCurrentContext];
+        
+        NSEntityDescription *entityDescription = [NSEntityDescription entityForName:@"WFLocation"
+                                                             inManagedObjectContext:managedContext];
+        NSFetchRequest *request = [[NSFetchRequest alloc] init];
+        [request setEntity:entityDescription];
+        
+//        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(location.latitude LIKE '%@') AND (location.longitude LIKE '%@')", location.latitude, location.longitude];
+//        [request setPredicate:predicate];
+        
+        // check whether current location has already had forecast in forecastCache
+        // determines whether object is contained in data base
+        
+        WFLocation *locationWeather;
         BOOL objectInDataBase = YES;
-        WFLocation *locationWeather = [self checkForecastExistance:location];
-        if (locationWeather == nil) {
-            // if object doesnt't exist in cache create new entity without inserting into model object context
+        NSError *error;
+        NSArray *array = [managedContext executeFetchRequest:request error:&error];
+        
+        if (array.count == 0){
             locationWeather = [[WFLocation alloc] initWithEntity];
             objectInDataBase = NO;
         }
+        else{
+            locationWeather = [array objectAtIndex:0];
+        }
         
-        dispatch_semaphore_signal(forecastCacheSemaphor);
-        
-        @try {
+        @try{
             
             // receive json-data from service
             NSString* position = [location makePositionFromCoordinates];
@@ -175,8 +115,15 @@
             NSData *averageData = [weatherServiceClient getAverrageWeatherForLocation:position];
             NSData *hourlyData = [weatherServiceClient getHourlyWeatherForLocation:position];
             
-            locationWeather.location= location;
+            // set data to object
+            locationWeather.location = [[GeographyLocation alloc] initWithEntity];
+            locationWeather.location.areaName = location.areaName;
+            locationWeather.location.country = location.country;
+            locationWeather.location.latitude = location.latitude;
+            locationWeather.location.longitude = location.longitude;
+            
             locationWeather.lastUpdate = [NSDate date];
+            
             // parse data to form forecast for location
             locationWeather.locationForecast = [NSSet setWithArray:[WFJSONParser parseLocationForecast:currentData
                                                                                  withAverageConditions:averageData
@@ -189,7 +136,7 @@
             
             if (objectInDataBase) {
                 // object is turned into a fault and any pending changes are lost if object was in data base
-                [self.managedObjectContext refreshObject:locationWeather mergeChanges:NO];
+                [managedContext refreshObject:locationWeather mergeChanges:NO];
             }
             else{
                 // if object weasn't in data base
@@ -206,93 +153,49 @@
                 dispatch_semaphore_wait(forecastCacheSemaphor, DISPATCH_TIME_FOREVER);
                 [forecastCache addObject:locationWeather];
                 dispatch_semaphore_signal(forecastCacheSemaphor);
-                
-                [self insertDataToContext:locationWeather];
             }
-            // save changes
-            [self saveCoreDataContext];
             
-            [[NSNotificationCenter defaultCenter] postNotificationName:FINISH_LOCATION_UPDATING_NOTIFICATION object:nil userInfo:nil];
+            // push to parent
+            NSError *error;
+            if (![managedContext save:&error])
+            {
+                // handle error
+                NSLog(@"Unresolved error %@. %@", error, [error userInfo]);
+                
+            }
+            
+            // save changes
+            // save parent to disk asynchronously
+            NSManagedObjectContext *mainContext = [CoreDataHelper getMainContext];
+            [mainContext performBlock:^{
+                NSError *error;
+                if (![mainContext save:&error])
+                {
+                    // handle error
+                    NSLog(@"Unresolved error %@. %@", error, [error userInfo]);
+                }
+            }];
         }
+        //------------------------------------------------------------------------------------------------------
+    
+        [[NSNotificationCenter defaultCenter] postNotificationName:FINISH_LOCATION_UPDATING_NOTIFICATION object:nil userInfo:nil];
     });
 }
 
+// Organize weather forecast updating for specified date in definite location from service
 - (void) updateForecastForDay:(int) dayIndex inLocation:(GeographyLocation *)location{
     
-    // create asynchronous block for data updating
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-        
-        // check whether current location has already had forecast in forecastCache
-        dispatch_semaphore_wait(forecastCacheSemaphor, DISPATCH_TIME_FOREVER);
-        
-        // determines whether object is contained in cache
-        BOOL objectInDataBase = YES;
-        WFLocation *locationWeather = [self checkForecastExistance:location];
-        if (locationWeather == nil) {
-            // if object doesnt't exist in cache create new entity without inserting into model object context
-            locationWeather = [[WFLocation alloc] initWithEntity];
-            objectInDataBase = NO;
-        }
-        
-        dispatch_semaphore_signal(forecastCacheSemaphor);
-        
-        @try {
-            
-            // receive json-data from service
-            NSString* position = [location makePositionFromCoordinates];
-            //NSData *dayData =
-            
-            locationWeather.location = location;
-            locationWeather.lastUpdate = [NSDate date];
-            // parse data to form forecast for location
-//            locationWeather.locationForecast = [NSSet setWithArray:[WFJSONParser parseLocationForecast:currentData
-//                                                                                 withAverageConditions:averageData
-//                                                                                  withHourlyConditions:hourlyData]];
-        }
-        @catch (NSException *exception) {
-            
-            // TODO: notify about service interaction exceptions and parsing exceptions
-            NSLog(@"%@ occured. Description: %@", exception.name, exception.description);
-            
-            if (objectInDataBase) {
-                // object is turned into a fault and any pending changes are lost if object was in data base
-                [self.managedObjectContext refreshObject:locationWeather mergeChanges:NO];
-            }
-            else{
-                // if object weasn't in data base
-                locationWeather = nil;
-            }
-        }
-        
-        if (locationWeather != nil){
-            
-            // If object wasn't in context (data base)
-            if (!objectInDataBase) {
-                
-                // add object to cache and insert into context
-                dispatch_semaphore_wait(forecastCacheSemaphor, DISPATCH_TIME_FOREVER);
-                [forecastCache addObject:locationWeather];
-                dispatch_semaphore_signal(forecastCacheSemaphor);
-                
-                [self insertDataToContext:locationWeather];
-            }
-            // save changes
-            [self saveCoreDataContext];
-        }
-    });
 }
 
+// Organize receiving weather forecast for specified date in definite location from service
 - (WFDaily*) getForecastForDay:(int) dayIndex inLocation:(GeographyLocation *)location{
     
     WFLocation *locationForecast = [self checkForecastExistance:location];
     NSArray *dailyForecast = locationForecast.locationForecast.allObjects;
-    WFDaily *dayWeather = [dailyForecast objectAtIndex:dayIndex];
-//    for (WFDaily *item in dailyForecast){
-//        if ([item.forecastDate isEqual:forecastDate]){
-//            dayWeather = item;
-//        }
-//    }
-    
+    WFDaily *dayWeather = nil;
+    if (dailyForecast.count != 0) {
+       dayWeather = [dailyForecast objectAtIndex:dayIndex];
+    }
     return dayWeather;
 }
 

@@ -10,13 +10,24 @@
 #import "WFManager.h"
 
 @interface AppDelegate ()
+{
+    NSMutableDictionary *threadsContextDictionary;
+    
+    dispatch_semaphore_t threadsContextSemaphore;
+}
 
 @end
 
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    // Override point for customization after application launch.
+    
+    // contexts working
+    threadsContextDictionary = [[NSMutableDictionary alloc] init];
+    threadsContextSemaphore = dispatch_semaphore_create(1);
+    
+    // Initialize Core Data stack
+    [self setupCoreDataStack];
     
     // Subscribe to event of size calculation finish
     [[NSNotificationCenter defaultCenter]
@@ -24,16 +35,15 @@
      selector:@selector(getUpdatedData:)
      name:FINISH_LOCATION_UPDATING_NOTIFICATION
      object:nil];
-
     
     WFManager *weatherForecastManager = [WFManager sharedWeatherManager];
+    
     //For testing
     GeographyLocation* location = [[GeographyLocation alloc] initWithEntity];
     location.areaName = @"Taganrog";
     location.country = @"Russia";
     location.latitude = @"47.221";
     location.longitude = @"38.909";
-    //For testing
     
     // TODO: save last shown location in default plist and update for it forecast
     [weatherForecastManager updateForecastForLocation:location];
@@ -41,8 +51,46 @@
     return YES;
 }
 
+- (void) addContext:(NSManagedObjectContext *)context forThread:(NSString *)threadName{
+    
+    dispatch_semaphore_wait(threadsContextSemaphore, DISPATCH_TIME_FOREVER);
+    [threadsContextDictionary setObject:context forKey:threadName];
+    dispatch_semaphore_signal(threadsContextSemaphore);
+}
+
+- (NSManagedObjectContext*) getContextForThread:(NSString *)threadName{
+    
+    NSManagedObjectContext *result = [threadsContextDictionary objectForKey:threadName];
+    return result;
+}
+
+- (NSURL *) applicationDocumentsDirectory{
+    return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
+}
+
+- (void) setupCoreDataStack {
+    
+    // setup managed object model
+    NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@"WeatherForecastModel" withExtension:@"momd"];
+    _managedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
+    
+    // setup persistent store coordinator
+    NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"WeatherForecastApp.sqlite"];
+    
+    NSError *error = nil;
+    _persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel: _managedObjectModel];
+    if(![_persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeURL options:nil error:&error]){
+        NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+    }
+    
+    // create main managed object context
+    self.mainManagedObjectContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
+    [self.mainManagedObjectContext setPersistentStoreCoordinator: _persistentStoreCoordinator];
+}
+
 - (void) getUpdatedData: (NSNotification*) notification{
     
+    // For testing
     GeographyLocation* location = [[GeographyLocation alloc] initWithEntity];
     location.areaName = @"Taganrog";
     location.country = @"Russia";
@@ -50,7 +98,6 @@
     location.longitude = @"38.909";
     
     WFDaily *dayWeather = [[WFManager sharedWeatherManager] getForecastForDay:0 inLocation:location];
-    int t = 0;
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {

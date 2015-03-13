@@ -26,12 +26,10 @@
     dispatch_semaphore_t requestsQueueSemaphor;
 }
 
-@property (readonly, nonatomic, strong) NSManagedObjectModel *managedObjectModel;
-
-@property (readonly, nonatomic, strong) NSPersistentStoreCoordinator *persistentStoreCoordinator;
-
-@property (readonly, nonatomic, strong) NSManagedObjectContext *managedObjectContext;
-
+/**
+ Static method which alows to receive instance of manager
+ @return singleton instance of manager
+ */
 + (WFManager*) sharedWeatherManager;
 
 /**
@@ -62,13 +60,5 @@
  @param completionHandler is a block which will be excuted when all necessary operation are performed
  */
 - (void) getLocationsForSearchingWord: (NSString*) searchingWord withCompletionHandler:(void (^)(NSArray *))completionHandler;
-
-- (void) saveCoreDataContext;
-
-- (void) insertDataToContext: (WFLocation*) locationForecast;
-
-//- (void) readDataFromDB;
-
-- (NSURL *) applicationDocumentsDirectory;
 
 @end

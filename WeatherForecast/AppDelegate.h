@@ -14,7 +14,18 @@
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
+
 @property (strong, nonatomic) ViewController *viewController;
+
+@property (strong, nonatomic) NSManagedObjectContext *mainManagedObjectContext;
+
+@property (strong, nonatomic) NSManagedObjectModel *managedObjectModel;
+
+@property (strong, nonatomic) NSPersistentStoreCoordinator *persistentStoreCoordinator;
+
+- (NSManagedObjectContext*) getContextForThread: (NSString*) threadName;
+
+- (void) addContext: (NSManagedObjectContext*) context forThread: (NSString*) threadName;
 
 @end
 
