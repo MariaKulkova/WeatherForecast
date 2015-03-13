@@ -7,22 +7,20 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <QuartzCore/QuartzCore.h>
 #import "WFManager.h"
+#import "CenterViewController.h"
+#import "SideMenuViewController.h"
 
-@interface ViewController : UIViewController
-{
-    WFManager *weatherForecastManager;
-}
+#define CENTER_TAG 1
+#define MENU_PANEL_TAG 2
+#define CORNER_RADIUS 4
 
-@property (strong, nonatomic) NSString *townName;
+@interface ViewController : UIViewController <CenterViewControllerDelegate, UIGestureRecognizerDelegate>
 
-@property (strong, nonatomic) NSDictionary *townWeatherDictionary;
+@property (nonatomic, strong) CenterViewController *centerViewController;
 
-@property (weak, nonatomic) IBOutlet UITextField *townTextField;
-
-@property (weak, nonatomic) IBOutlet UIButton *searchButton;
-
-@property (nonatomic,strong) NSManagedObjectContext* managedObjectContext;
+@property (nonatomic, strong) SideMenuViewController *sideMenuViewController;
 
 @end
 

@@ -23,6 +23,14 @@
 		4CC036B51AA7131A004D7993 /* RequestQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CC036B41AA7131A004D7993 /* RequestQueue.m */; };
 		4CC552381A95D8BF00797E51 /* WFJSONParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CC552371A95D8BF00797E51 /* WFJSONParser.m */; };
 		4CC5B9FF1A9DBC9700531E6D /* GeographyLocation.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CC5B9FE1A9DBC9700531E6D /* GeographyLocation.m */; };
+		4CC748451AB0944C000A4F64 /* ForecastViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CC748431AB0944C000A4F64 /* ForecastViewController.m */; };
+		4CC748461AB0944C000A4F64 /* ForecastViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4CC748441AB0944C000A4F64 /* ForecastViewController.xib */; };
+		4CC7EF901AB2C2CD003C96FB /* CenterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CC7EF8E1AB2C2CD003C96FB /* CenterViewController.m */; };
+		4CC7EF911AB2C2CD003C96FB /* CenterViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4CC7EF8F1AB2C2CD003C96FB /* CenterViewController.xib */; };
+		4CC7EF951AB2C2E6003C96FB /* SideMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CC7EF931AB2C2E6003C96FB /* SideMenuViewController.m */; };
+		4CC7EF961AB2C2E6003C96FB /* SideMenuViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4CC7EF941AB2C2E6003C96FB /* SideMenuViewController.xib */; };
+		4CC7EF981AB2CC5B003C96FB /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CC7EF971AB2CC5B003C96FB /* QuartzCore.framework */; };
+		4CCB10D31AAEFFCC003B15F1 /* CoreDataHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CCB10D21AAEFFCC003B15F1 /* CoreDataHelper.m */; };
 		4CD3E3BA1AA45112002C0D55 /* JSONParseException.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CD3E3B91AA45112002C0D55 /* JSONParseException.m */; };
 		4CD3E3BC1AA46FB5002C0D55 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CD3E3BB1AA46FB5002C0D55 /* CoreData.framework */; };
 		4CD3E3BF1AA46FEE002C0D55 /* WeatherForecastModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4CD3E3BD1AA46FEE002C0D55 /* WeatherForecastModel.xcdatamodeld */; };
@@ -72,6 +80,18 @@
 		4CC552371A95D8BF00797E51 /* WFJSONParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WFJSONParser.m; sourceTree = "<group>"; };
 		4CC5B9FD1A9DBC9700531E6D /* GeographyLocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GeographyLocation.h; sourceTree = "<group>"; };
 		4CC5B9FE1A9DBC9700531E6D /* GeographyLocation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeographyLocation.m; sourceTree = "<group>"; };
+		4CC748421AB0944C000A4F64 /* ForecastViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ForecastViewController.h; sourceTree = "<group>"; };
+		4CC748431AB0944C000A4F64 /* ForecastViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ForecastViewController.m; sourceTree = "<group>"; };
+		4CC748441AB0944C000A4F64 /* ForecastViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ForecastViewController.xib; sourceTree = "<group>"; };
+		4CC7EF8D1AB2C2CD003C96FB /* CenterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CenterViewController.h; sourceTree = "<group>"; };
+		4CC7EF8E1AB2C2CD003C96FB /* CenterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CenterViewController.m; sourceTree = "<group>"; };
+		4CC7EF8F1AB2C2CD003C96FB /* CenterViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CenterViewController.xib; sourceTree = "<group>"; };
+		4CC7EF921AB2C2E6003C96FB /* SideMenuViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SideMenuViewController.h; sourceTree = "<group>"; };
+		4CC7EF931AB2C2E6003C96FB /* SideMenuViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SideMenuViewController.m; sourceTree = "<group>"; };
+		4CC7EF941AB2C2E6003C96FB /* SideMenuViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SideMenuViewController.xib; sourceTree = "<group>"; };
+		4CC7EF971AB2CC5B003C96FB /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		4CCB10D11AAEFFCC003B15F1 /* CoreDataHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoreDataHelper.h; sourceTree = "<group>"; };
+		4CCB10D21AAEFFCC003B15F1 /* CoreDataHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CoreDataHelper.m; sourceTree = "<group>"; };
 		4CD3E3B81AA45112002C0D55 /* JSONParseException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSONParseException.h; sourceTree = "<group>"; };
 		4CD3E3B91AA45112002C0D55 /* JSONParseException.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSONParseException.m; sourceTree = "<group>"; };
 		4CD3E3BB1AA46FB5002C0D55 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
@@ -83,6 +103,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4CC7EF981AB2CC5B003C96FB /* QuartzCore.framework in Frameworks */,
 				4CD3E3BC1AA46FB5002C0D55 /* CoreData.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -100,6 +121,7 @@
 		4CA4CF1D1A932291008C28AD = {
 			isa = PBXGroup;
 			children = (
+				4CC7EF971AB2CC5B003C96FB /* QuartzCore.framework */,
 				4CD3E3BB1AA46FB5002C0D55 /* CoreData.framework */,
 				4CA4CF281A932291008C28AD /* WeatherForecast */,
 				4CA4CF421A932291008C28AD /* WeatherForecastTests */,
@@ -170,6 +192,8 @@
 				4CA4CF6A1A934632008C28AD /* WFConditions.m */,
 				4CC5B9FD1A9DBC9700531E6D /* GeographyLocation.h */,
 				4CC5B9FE1A9DBC9700531E6D /* GeographyLocation.m */,
+				4CCB10D11AAEFFCC003B15F1 /* CoreDataHelper.h */,
+				4CCB10D21AAEFFCC003B15F1 /* CoreDataHelper.m */,
 			);
 			name = "Objects model";
 			sourceTree = "<group>";
@@ -179,6 +203,12 @@
 			children = (
 				4CA4CF301A932291008C28AD /* ViewController.h */,
 				4CA4CF311A932291008C28AD /* ViewController.m */,
+				4CC748421AB0944C000A4F64 /* ForecastViewController.h */,
+				4CC748431AB0944C000A4F64 /* ForecastViewController.m */,
+				4CC7EF8D1AB2C2CD003C96FB /* CenterViewController.h */,
+				4CC7EF8E1AB2C2CD003C96FB /* CenterViewController.m */,
+				4CC7EF921AB2C2E6003C96FB /* SideMenuViewController.h */,
+				4CC7EF931AB2C2E6003C96FB /* SideMenuViewController.m */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -207,6 +237,9 @@
 			children = (
 				4CA4CF621A934534008C28AD /* LaunchScreen.xib */,
 				4CA4CF631A934534008C28AD /* Main.storyboard */,
+				4CC748441AB0944C000A4F64 /* ForecastViewController.xib */,
+				4CC7EF8F1AB2C2CD003C96FB /* CenterViewController.xib */,
+				4CC7EF941AB2C2E6003C96FB /* SideMenuViewController.xib */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -300,7 +333,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4CC7EF911AB2C2CD003C96FB /* CenterViewController.xib in Resources */,
 				4CA4CF641A934534008C28AD /* LaunchScreen.xib in Resources */,
+				4CC7EF961AB2C2E6003C96FB /* SideMenuViewController.xib in Resources */,
+				4CC748461AB0944C000A4F64 /* ForecastViewController.xib in Resources */,
 				4CA4CF651A934534008C28AD /* Main.storyboard in Resources */,
 				4CA4CF371A932291008C28AD /* Images.xcassets in Resources */,
 			);
@@ -320,14 +356,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4CC7EF951AB2C2E6003C96FB /* SideMenuViewController.m in Sources */,
+				4CC7EF901AB2C2CD003C96FB /* CenterViewController.m in Sources */,
 				4CA4CF6B1A934632008C28AD /* WFConditions.m in Sources */,
 				4CC036B51AA7131A004D7993 /* RequestQueue.m in Sources */,
 				4CA4CF741A934DA8008C28AD /* WFClient.m in Sources */,
+				4CCB10D31AAEFFCC003B15F1 /* CoreDataHelper.m in Sources */,
 				4CA4CF771A934DCF008C28AD /* WFManager.m in Sources */,
 				4CA4CF321A932291008C28AD /* ViewController.m in Sources */,
 				4CA4CF711A9348C6008C28AD /* WFLocation.m in Sources */,
 				4CD3E3BA1AA45112002C0D55 /* JSONParseException.m in Sources */,
 				4CC552381A95D8BF00797E51 /* WFJSONParser.m in Sources */,
+				4CC748451AB0944C000A4F64 /* ForecastViewController.m in Sources */,
 				4CD3E3BF1AA46FEE002C0D55 /* WeatherForecastModel.xcdatamodeld in Sources */,
 				4CC5B9FF1A9DBC9700531E6D /* GeographyLocation.m in Sources */,
 				4CA4CF2F1A932291008C28AD /* AppDelegate.m in Sources */,
