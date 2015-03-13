@@ -8,6 +8,7 @@
 
 #import "WFLocation.h"
 #import "WFManager.h"
+#import "CoreDataHelper.h"
 
 @implementation WFLocation
 
@@ -16,9 +17,10 @@
 @dynamic locationForecast;
 
 - (id) initWithEntity{
+    NSManagedObjectContext *currentContext = [CoreDataHelper getCurrentContext];
     NSEntityDescription *entity = [NSEntityDescription entityForName:@"WFLocation"
-                                              inManagedObjectContext:[WFManager sharedWeatherManager].managedObjectContext];
-    self = [[WFLocation alloc] initWithEntity:entity insertIntoManagedObjectContext:nil];
+                                              inManagedObjectContext:currentContext];
+    self = [[WFLocation alloc] initWithEntity:entity insertIntoManagedObjectContext:currentContext];
     return self;
 }
 

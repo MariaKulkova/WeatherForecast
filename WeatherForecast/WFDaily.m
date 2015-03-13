@@ -8,6 +8,7 @@
 
 #import "WFDaily.h"
 #import "WFManager.h"
+#import "CoreDataHelper.h"
 
 @implementation WFDaily
 
@@ -17,9 +18,10 @@
 @dynamic hourlyCondition;
 
 - (id) initWithEntity{
+    NSManagedObjectContext *currentContext = [CoreDataHelper getCurrentContext];
     NSEntityDescription *entity = [NSEntityDescription entityForName:@"WFDaily"
-                                              inManagedObjectContext:[WFManager sharedWeatherManager].managedObjectContext];
-    self = [[WFDaily alloc] initWithEntity:entity insertIntoManagedObjectContext:nil];
+                                              inManagedObjectContext:currentContext];
+    self = [[WFDaily alloc] initWithEntity:entity insertIntoManagedObjectContext:currentContext];
     return self;
 }
 

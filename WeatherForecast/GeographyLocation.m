@@ -8,6 +8,7 @@
 
 #import "GeographyLocation.h"
 #import "WFManager.h"
+#import "CoreDataHelper.h"
 
 @implementation GeographyLocation
 
@@ -17,9 +18,11 @@
 @dynamic longitude;
 
 - (id) initWithEntity{
+    NSManagedObjectContext *currentContext = [CoreDataHelper getCurrentContext];
     NSEntityDescription *entity = [NSEntityDescription entityForName:@"GeographyLocation"
-                                              inManagedObjectContext:[WFManager sharedWeatherManager].managedObjectContext];
-    self = [[GeographyLocation alloc] initWithEntity:entity insertIntoManagedObjectContext:nil];
+                                              inManagedObjectContext:currentContext];
+    self = [[GeographyLocation alloc] initWithEntity:entity insertIntoManagedObjectContext:currentContext];
+    NSLog(@"%@", currentContext);
     return self;
 }
 

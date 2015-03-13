@@ -52,6 +52,7 @@ NSString* const WFClientErrorDomain = @"WFClientErrorDomain";
         
         // Instantiate a session configuration object.
         NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
+        configuration.timeoutIntervalForRequest = 5;
         
         // Instantiate a session object.
         URLSession = [NSURLSession sessionWithConfiguration:configuration];

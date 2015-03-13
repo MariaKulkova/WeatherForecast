@@ -8,6 +8,7 @@
 
 #import "WFConditions.h"
 #import "WFManager.h"
+#import "CoreDataHelper.h"
 
 @implementation WFConditions
 
@@ -16,9 +17,10 @@
 @dynamic weatherType;
 
 - (id) initWithEntity{
+    NSManagedObjectContext *currentContext = [CoreDataHelper getCurrentContext];
     NSEntityDescription *entity = [NSEntityDescription entityForName:@"WFConditions"
-                                              inManagedObjectContext:[WFManager sharedWeatherManager].managedObjectContext];
-    self = [[WFConditions alloc] initWithEntity:entity insertIntoManagedObjectContext:nil];
+                                              inManagedObjectContext:currentContext];
+    self = [[WFConditions alloc] initWithEntity:entity insertIntoManagedObjectContext:currentContext];
     return self;
 }
 
