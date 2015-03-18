@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14A389" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14A389" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="mmk-gm-6Wh">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
@@ -14,11 +14,116 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
-                    <navigationItem key="navigationItem" id="IaR-TJ-Rxl"/>
+                    <navigationItem key="navigationItem" id="gwd-aw-mNo">
+                        <barButtonItem key="leftBarButtonItem" title="Menu" width="20" id="Gw6-2S-ede">
+                            <color key="tintColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                            <connections>
+                                <action selector="menuAction:" destination="BYZ-38-t0r" id="HKk-VG-0Nl"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" title="Search" id="fBC-DE-DaY">
+                            <color key="tintColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                            <connections>
+                                <action selector="searchAction:" destination="BYZ-38-t0r" id="Fj3-Ws-lj6"/>
+                                <segue destination="dIl-ST-DKN" kind="modal" id="ns9-P1-E3Z"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1245" y="416"/>
+            <point key="canvasLocation" x="1933" y="416"/>
+        </scene>
+        <!--Search View Controller-->
+        <scene sceneID="OLf-rW-41y">
+            <objects>
+                <viewController id="KmF-ig-bDA" customClass="SearchViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="cmr-pR-Kxs">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" id="I5I-HY-c3I">
+                                <rect key="frame" x="0.0" y="66" width="320" height="502"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <searchBar contentMode="redraw" placeholder="Location name..." showsCancelButton="YES" id="jmd-Gy-i95">
+                                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                        <scopeButtonTitles>
+                                            <string>Title</string>
+                                            <string>Title</string>
+                                        </scopeButtonTitles>
+                                        <connections>
+                                            <outlet property="delegate" destination="KmF-ig-bDA" id="Shm-WJ-1IT"/>
+                                        </connections>
+                                    </searchBar>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="6J8-bs-fuy">
+                        <barButtonItem key="leftBarButtonItem" title="Back" id="eVE-cG-zgi">
+                            <connections>
+                                <segue destination="6nN-8y-JCb" kind="unwind" unwindAction="unwindToMainViewController:" id="K2u-4f-aRN"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="searchArea" destination="I5I-HY-c3I" id="LmT-al-uQb"/>
+                        <outlet property="searchDisplayController" destination="Chn-A1-IwP" id="6Gq-MR-Fbf"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="hbn-z5-ASe" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="6nN-8y-JCb" userLabel="Exit" sceneMemberID="exit"/>
+                <searchDisplayController id="Chn-A1-IwP">
+                    <connections>
+                        <outlet property="delegate" destination="KmF-ig-bDA" id="HMQ-oO-iMq"/>
+                        <outlet property="searchContentsController" destination="KmF-ig-bDA" id="WZ9-6r-Qav"/>
+                        <outlet property="searchResultsDataSource" destination="KmF-ig-bDA" id="elr-59-IbZ"/>
+                        <outlet property="searchResultsDelegate" destination="KmF-ig-bDA" id="bFT-UU-FAv"/>
+                    </connections>
+                </searchDisplayController>
+            </objects>
+            <point key="canvasLocation" x="2894" y="416"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="0LD-AE-B0N">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="mmk-gm-6Wh" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="avX-zV-3Hg">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="l0s-P6-ezV"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="KBv-nB-cQj" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1362" y="416"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="KXn-sR-Kg1">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="dIl-ST-DKN" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="rZp-cb-gCZ">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="KmF-ig-bDA" kind="relationship" relationship="rootViewController" id="TDQ-fb-3hp"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="GWO-HT-bjg" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2417" y="416"/>
         </scene>
     </scenes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">

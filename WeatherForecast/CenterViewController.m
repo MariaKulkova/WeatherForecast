@@ -27,6 +27,7 @@
 - (id) init{
     if (self = [super init]){
         forecastControllersArray = [[NSMutableArray alloc] init];
+        currentPageIndex = 0;
         
         // Adds controllers for forecast representation
         for (int i = 0; i < 5; i++) {
@@ -48,14 +49,13 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    [self calculateViewsFrames:[self receiveFrameForOrientation:self.interfaceOrientation]];
-    
     self.view.backgroundColor = [colors objectAtIndex:0];
     
     // Add controllers views
     for (ForecastViewController *controller in forecastControllersArray){
         [self.pagingScrollView addSubview:controller.view];
     }
+    [self calculateViewsFrames:[Helper receiveFrameForOrientation:self.interfaceOrientation]];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -74,7 +74,7 @@
     
     // When scrolling movement comes to a halt in scroll view with paging enabled it indicates next page transition
     // So it calculates current page number
-    CGRect orientationFrame = [self receiveFrameForOrientation:self.interfaceOrientation];
+    CGRect orientationFrame = [Helper receiveFrameForOrientation:self.interfaceOrientation];
     CGFloat maximumHorizontalOffset = orientationFrame.size.width;
     currentPageIndex = scrollView.contentOffset.x / maximumHorizontalOffset;
 }
@@ -89,7 +89,7 @@
 - (UIColor *)RGBColorForOffsetPercentage:(CGFloat)horizontalOffset {
     
     // Receive right screen frame
-    CGRect orientationFrame = [self receiveFrameForOrientation:self.interfaceOrientation];
+    CGRect orientationFrame = [Helper receiveFrameForOrientation:self.interfaceOrientation];
     
     CGFloat maximumHorizontalOffset = orientationFrame.size.width;
     int currentViewIndex = horizontalOffset / maximumHorizontalOffset;
@@ -139,7 +139,7 @@
         ForecastViewController *controller = [forecastControllersArray objectAtIndex:i];
         CGRect frame;
         frame.origin.x = orientationFrame.size.width * i;
-        frame.origin.y = 0;
+        frame.origin.y = orientationFrame.origin.y;
         frame.size = orientationFrame.size;
         [controller.view setFrame:frame];
         [controller.refreshScrollView setFrame:CGRectMake(0, 0, orientationFrame.size.width, orientationFrame.size.height)];
@@ -149,22 +149,8 @@
 
 - (void) viewDidLayoutSubviews{
     [super viewDidLayoutSubviews];
-    [self calculateViewsFrames:[self receiveFrameForOrientation:self.interfaceOrientation]];
+    [self calculateViewsFrames:[Helper receiveFrameForOrientation:self.interfaceOrientation]];
 }
 
-// Determines screen frame
-- (CGRect) receiveFrameForOrientation: (UIInterfaceOrientation) interfaceOrientation{
-    CGRect mainFrame = [[UIScreen mainScreen] applicationFrame];
-    //mainFrame.size.height += [UIApplication sharedApplication].statusBarFrame.size.height;
-    if (NSFoundationVersionNumber <= NSFoundationVersionNumber_iOS_7_1){
-        if (interfaceOrientation == UIInterfaceOrientationPortrait || interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {
-            return (CGRectMake(mainFrame.origin.x, mainFrame.origin.y, mainFrame.size.width, mainFrame.size.height));
-        }
-        else{
-            return (CGRectMake(mainFrame.origin.x, mainFrame.origin.y, mainFrame.size.height, mainFrame.size.width));
-        }
-    }
-    return mainFrame;
-}
 
 @end

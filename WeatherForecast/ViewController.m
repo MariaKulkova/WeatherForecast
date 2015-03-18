@@ -1,4 +1,4 @@
-//
+ //
 //  ViewController.m
 //  WeatherForecast
 //
@@ -31,6 +31,7 @@
     if (self = [super initWithCoder:aDecoder]){
         self.centerViewController = [[CenterViewController alloc] init];
         self.sideMenuViewController = [[SideMenuViewController alloc] init];
+        //self.searchViewController = [[SearchViewController alloc] init];
     }
     return self;
 }
@@ -48,17 +49,24 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (IBAction)unwindToMainViewController:(UIStoryboardSegue*)sender{
+    
+}
+
 // Setups view for controllers
 - (void)setupView
 {
-    [self.view addSubview:self.sideMenuViewController.view];
     self.sideMenuViewController.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
+    [self.view addSubview:self.sideMenuViewController.view];
+    
+//    self.searchViewController.view.frame = CGRectMake(0, self.view.frame.size.height, 0, 0);
+//    [self.view addSubview:self.searchViewController.view];
     
     self.centerViewController.delegate = self;
     [self.view addSubview:self.centerViewController.view];
-    [self addChildViewController:_centerViewController];
+    //[self addChildViewController:self.centerViewController];
     
-    [_centerViewController didMoveToParentViewController:self];
+    [self.centerViewController didMoveToParentViewController:self];
 }
 
 // Setup gesture recognizers
@@ -94,7 +102,7 @@
 
 // Shows side menu when swipe from left edge is recognized
 - (void)showMenuForSwipe:(UIScreenEdgePanGestureRecognizer *)gesture {
-
+    
     if(UIGestureRecognizerStateRecognized == gesture.state && showingLeftPanel == NO) {
         
         [self.view sendSubviewToBack:self.sideMenuViewController.view];
@@ -118,6 +126,26 @@
     }
 }
 
+- (IBAction)menuAction:(id)sender {
+    
+    if (showingLeftPanel == NO) {
+        
+        [self movePanelRight];
+        self.leftSwipeRecognizer.enabled = YES;
+        self.leftEdgeSwipeRecognizer.enabled = NO;
+    }
+    else{
+        [self movePanelToOriginalPosition];
+        self.leftSwipeRecognizer.enabled = NO;
+        self.leftEdgeSwipeRecognizer.enabled = YES;
+    }
+}
+
+- (IBAction)searchAction:(id)sender {
+    [self.navigationController pushViewController:self.searchViewController animated:NO];
+    //[self showSearchPanel];
+}
+
 // Adds or removes shadow under central view
 - (void)showCenterViewWithShadow:(BOOL)value withOffset:(double)offset
 {
@@ -134,15 +162,36 @@
     }
 }
 
+- (void) showSearchPanel{
+    CGRect currentFrame = self.searchViewController.view.frame;
+    currentFrame.size = self.view.frame.size;
+    [self.searchViewController.view setFrame:currentFrame];
+    [self.view bringSubviewToFront:self.searchViewController.view];
+    currentFrame.origin = self.view.frame.origin;
+    
+    [UIView animateWithDuration:0.25 delay:0 options:UIViewAnimationOptionBeginFromCurrentState
+                     animations:^{
+                         [self.searchViewController.view setFrame:currentFrame];
+                     }
+                     completion:^(BOOL finished) {
+                         
+                     }];
+
+}
+
 // Moves central view to the right to open side menu
 -(void) movePanelRight{
 
     [self showCenterViewWithShadow:YES withOffset:-2];
     [self.view sendSubviewToBack:self.sideMenuViewController.view];
     
+    CGRect navFrame = self.navigationController.navigationBar.frame;
+    navFrame.origin.x = self.view.frame.size.width - 60;
+    
     [UIView animateWithDuration:0.25 delay:0 options:UIViewAnimationOptionBeginFromCurrentState
                      animations:^{
-                         _centerViewController.view.frame = CGRectMake(self.view.frame.size.width - 60, 0, self.view.frame.size.width, self.view.frame.size.height);
+                         self.centerViewController.view.frame = CGRectMake(self.view.frame.size.width - 60, 0, self.view.frame.size.width, self.view.frame.size.height);
+                         [self.navigationController.navigationBar setFrame:navFrame];
                      }
                      completion:^(BOOL finished) {
                          if (finished) {
@@ -155,9 +204,13 @@
 // Move central view to original position to hide side menu
 - (void) movePanelToOriginalPosition{
     
+    CGRect navFrame = self.navigationController.navigationBar.frame;
+    navFrame.origin.x = 0;
+    
     [UIView animateWithDuration:0.25 delay:0 options:UIViewAnimationOptionBeginFromCurrentState
                      animations:^{
-                         _centerViewController.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
+                         self.centerViewController.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
+                         [self.navigationController.navigationBar setFrame:navFrame];
                      }
                      completion:^(BOOL finished) {
                          if (finished) {

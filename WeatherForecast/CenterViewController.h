@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "Helper.h"
 
 @protocol CenterViewControllerDelegate <NSObject>
 
@@ -27,6 +28,5 @@
 
 @property (weak, nonatomic) IBOutlet UINavigationBar *navigationBar;
 
-- (CGRect) receiveFrameForOrientation: (UIInterfaceOrientation) interfaceOrientation;
 
 @end
